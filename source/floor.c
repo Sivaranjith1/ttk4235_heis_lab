@@ -1,10 +1,12 @@
 #include "floor.h"
 #include "hardware.h"
+#include <stddef.h>
 
 static uint8_t last_visited_floor;
 static uint8_t door_open;
 
 static void (*p_onFloorCallback)();
+inline static void runCallbackFunction();
 
 void floor_init(){
     door_open = 0;
@@ -61,7 +63,7 @@ void setOnFloorCallbackFunction(void (*callback_ptr)()){
     p_onFloorCallback = callback_ptr;
 }
 
-static inline void runCallbackFunction(){
+inline static void runCallbackFunction(){
     if(p_onFloorCallback == NULL) return;
 
     (*p_onFloorCallback)();
