@@ -14,12 +14,12 @@ void floor_init(){
         {
             if(hardware_read_floor_sensor(i)){
                 last_visited_floor = i;
-                break;
+                hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+                return;
             }
         }
         
     }
     
 
-    hardware_command_movement(HARDWARE_MOVEMENT_STOP);
 }
