@@ -2,16 +2,9 @@
 #include <stdlib.h>
 #include <signal.h>
 #include "hardware.h"
+#include "fsm.h"
 
-typedef enum {
-    INITIALIZE,
-    DRIVE_UP,
-    DRIVE_DOWN,
-    WAITING,
-    DOOR_OPEN
-} STATE;
 
-static STATE current_state;
 
 static void clear_all_order_lights(){
     HardwareOrder order_types[3] = {
@@ -35,35 +28,12 @@ int main(){
         fprintf(stderr, "Unable to initialize hardware\n");
         exit(1);
     }
+    
+    fsm_init();
 
-    current_state = INITIALIZE;
-    while(1) {
-        switch (current_state)
-        {
-        case INITIALIZE:
-            /* code */
-            break;
-
-        case DRIVE_UP:
-            /* code */
-            break;
-
-        case DRIVE_DOWN:
-            /* code */
-            break;
-
-        case WAITING:
-            /* code */
-            break;
-
-        case DOOR_OPEN:
-            /* code */
-            break;
-        
-        default:
-            break;
-        }
-    }
+    fsmRun(); //this is a blocking function
+    
+    fprintf(stderr, "Unable to run finite state machine\n");
     
     // printf("=== Example Program ===\n");
     // printf("Press the stop button on the elevator panel to exit\n");
@@ -119,7 +89,7 @@ int main(){
     //     else{
     //         hardware_command_stop_light(0);
     //     }
-    }
+    // }
 
     return 0;
 }
