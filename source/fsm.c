@@ -1,5 +1,6 @@
 #include "fsm.h"
 #include "floor.h"
+#include "hardware.h"
 
 /**
  * @brief Under states such as entry exit for the states under
@@ -14,12 +15,13 @@ typedef enum {
 static STATE current_state;
 static UNDER_STATE current_under_state;
 
+void fsmInitState();
 void fsmWaitingState();
 void fsmDoorOpenState();
 
 void fsm_init(){
     current_state = INITIALIZE;
-    current_under_state = NONE;
+    current_under_state = ENTRY;
 }
 
 STATE getFsmState() {
@@ -43,7 +45,7 @@ void fsmRun() {
         {
         case INITIALIZE:
         {
-            floor_init();
+            fsmInitState();
             /* code */
             break;
         }
@@ -79,6 +81,27 @@ void fsmRun() {
 }
 
 /**
+ * @brief The underlaying finite state machine within the state of Initialize
+ * 
+ */
+void fsmInitState(){
+    switch (current_under_state)
+    {
+    case ENTRY:
+    {
+        floor_init();
+        setFsmState(WAITING);
+
+        break;
+    }
+    
+    default:
+        break;
+    }
+}
+
+
+/**
  * @brief The underlaying finite state machine within the state of Waiting
  * 
  */
@@ -87,6 +110,7 @@ void fsmWaitingState(){
     {
     case ENTRY:
     {
+        hardware_command_movement(HARDWARE_MOVEMENT_STOP);
         break;
     }
     
