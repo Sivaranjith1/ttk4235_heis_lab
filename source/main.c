@@ -119,7 +119,7 @@ int main(){
     //     else{
     //         hardware_command_stop_light(0);
     //     }
-    }
+    //}
 
     return 0;
 }
