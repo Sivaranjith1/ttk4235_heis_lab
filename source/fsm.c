@@ -1,4 +1,5 @@
 #include "fsm.h"
+#include "floor.h"
 
 /**
  * @brief Under states such as entry exit for the states under
@@ -42,7 +43,7 @@ void fsmRun() {
         {
         case INITIALIZE:
         {
-
+            floor_init();
             /* code */
             break;
         }
