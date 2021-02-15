@@ -22,11 +22,6 @@
 void floor_init();
 
 
-/**
- * @brief Set the Last Visited Floor object when detecting a sensor update
- * 
- */
-void setLastVisitedFloor();
 
 /**
  * @brief Get the Last Visited Floor object
@@ -41,5 +36,13 @@ uint8_t getLastVisitedFloor();
  * @param floor_num the floor that is desired
  */
 void goToFloor(uint8_t floor_num);
+
+/**
+ * @brief Set the Last Visited Floor object when detecting a sensor update
+ * 
+ */
+void setLastVisitedFloor();
+
+void setOnFloorCallbackFunction(void (*callback_ptr)());
 
 #endif
