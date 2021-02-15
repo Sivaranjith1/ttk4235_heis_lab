@@ -20,6 +20,36 @@ void floor_init(){
         }
         
     }
-    
+}
 
+void setLastVisitedFloor(){
+    if(last_visited_floor != 0){
+        if(hardware_read_floor_sensor(last_visited_floor - 1)){
+            last_visited_floor --;
+        }
+    } 
+    
+    if(last_visited_floor != NUM_FLOOR - 1){
+        if(hardware_read_floor_sensor(last_visited_floor + 1)){
+            last_visited_floor ++;
+        }
+    }
+}
+
+uint8_t getLastVisitedFloor(){
+    return last_visited_floor;
+}
+
+void goToFloor(uint8_t floor_num){
+    if(last_visited_floor == floor_num) {
+        hardware_command_movement(HARDWARE_MOVEMENT_STOP);    
+        return;
+    }
+
+    //if the floor is above
+    if(last_visited_floor < floor_num){
+        hardware_command_movement(HARDWARE_MOVEMENT_UP);
+    } else if(last_visited_floor > floor_num){
+        hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+    }
 }
