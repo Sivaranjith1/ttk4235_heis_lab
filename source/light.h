@@ -9,22 +9,24 @@
  * 
  */
 
-#ifndef LIGHT.H
-#define LIGHT.H
+#ifndef LIGHT_H
+#define LIGHT_H
 
 
 #include "hardware.h"
 #include <stdint.h>
 
-#define NUMBER_OF_LIGHTS{15}
+#define NUMBER_OF_LIGHTS 15
 
-/***/
-typedef struct
+/**
+ * @brief 
+ * 
+ */
+typedef struct Lights
 {
-    uint8_t floor_light_state[];
+    uint8_t floor_light_state[NUMBER_OF_LIGHTS];
     uint8_t stop_light_state;
-} Lights;
-
+} lights;
 /**
  * @brief 
  * 

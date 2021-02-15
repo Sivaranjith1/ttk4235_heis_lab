@@ -10,8 +10,8 @@
  */
 
 
-#ifndef BUTTON.H
-#define BUTTON.H
+#ifndef BUTTON_H
+#define BUTTON_H
 #include "hardware.h"
 #include "queue.h"
 #include "fsm.h"
