@@ -53,14 +53,14 @@ void fsmRun() {
         case DRIVE_UP:
         {
 
-            /* code */
+            set_last_visited_floor();
             break;
         }
 
         case DRIVE_DOWN:
         {
 
-            /* code */
+            set_last_visited_floor();
             break;
         }
 

@@ -4,9 +4,12 @@
 
 static uint8_t last_visited_floor;
 static uint8_t door_open;
+static uint8_t requested_floor = NUM_FLOOR;
 
 static void (*p_onFloorCallback)();
+
 inline static void runCallbackFunction();
+static void move_until_floor_reached();
 
 void floor_init(){
     door_open = 0;
@@ -28,7 +31,7 @@ void floor_init(){
     }
 }
 
-void setLastVisitedFloor(){
+void set_last_visited_floor(){
     
     if(last_visited_floor != 0 && hardware_read_floor_sensor(last_visited_floor - 1)){
         last_visited_floor --;
@@ -46,6 +49,24 @@ uint8_t getLastVisitedFloor(){
 }
 
 void goToFloor(uint8_t floor_num){
+    requested_floor = floor_num;
+    setOnFloorCallbackFunction(&move_until_floor_reached);
+    p_onFloorCallback();
+}
+
+void setOnFloorCallbackFunction(void (*callback_ptr)()){
+    p_onFloorCallback = callback_ptr;
+}
+
+inline static void runCallbackFunction(){
+    if(p_onFloorCallback == NULL) return;
+
+    (*p_onFloorCallback)();
+}
+
+static void move_until_floor_reached(){
+    if(requested_floor >= NUM_FLOOR) return;
+
     if(last_visited_floor == floor_num) {
         hardware_command_movement(HARDWARE_MOVEMENT_STOP);    
         return;
@@ -57,14 +78,4 @@ void goToFloor(uint8_t floor_num){
     } else if(last_visited_floor > floor_num){
         hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
     }
-}
-
-void setOnFloorCallbackFunction(void (*callback_ptr)()){
-    p_onFloorCallback = callback_ptr;
-}
-
-inline static void runCallbackFunction(){
-    if(p_onFloorCallback == NULL) return;
-
-    (*p_onFloorCallback)();
 }
