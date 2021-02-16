@@ -9,7 +9,7 @@ static uint8_t requested_floor = NUM_FLOOR;
 
 static void (*p_onFloorCallback)();
 
-inline static void runCallbackFunction();
+inline static void run_on_floor_callback_function();
 static void move_until_floor_reached();
 
 void floor_init(){
@@ -25,6 +25,7 @@ void floor_init(){
             if(hardware_read_floor_sensor(i)){
                 last_visited_floor = i;
                 hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+                run_on_floor_callback_function();
                 return;
             }
         }
@@ -36,12 +37,12 @@ void set_last_visited_floor(){
     
     if(last_visited_floor != 0 && hardware_read_floor_sensor(last_visited_floor - 1)){
         last_visited_floor --;
-        runCallbackFunction();
+        run_on_floor_callback_function();
     }
 
     if(last_visited_floor != NUM_FLOOR - 1 && hardware_read_floor_sensor(last_visited_floor + 1)){
         last_visited_floor ++;
-        runCallbackFunction();
+        run_on_floor_callback_function();
     }
 }
 
@@ -59,7 +60,11 @@ void setOnFloorCallbackFunction(void (*callback_ptr)()){
     p_onFloorCallback = callback_ptr;
 }
 
-inline static void runCallbackFunction(){
+/**
+ * @brief Runs the callback function when reaching a floor
+*/
+inline static void run_on_floor_callback_function(){
+    hardware_command_floor_indicator_on(last_visited_floor);
     if(p_onFloorCallback == NULL) return;
 
     (*p_onFloorCallback)();

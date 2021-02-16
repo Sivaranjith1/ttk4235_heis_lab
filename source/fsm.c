@@ -116,7 +116,7 @@ void fsmWaitingState(){
     case ENTRY:
     {
         hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-        goToFloor(3);
+        goToFloor(0);
         break;
     }
     
