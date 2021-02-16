@@ -1,7 +1,7 @@
 #include "floor.h"
 #include "hardware.h"
 #include "fsm.h"
-#include <stddef.h>
+#include <stdio.h>
 
 static uint8_t last_visited_floor;
 static uint8_t door_open;

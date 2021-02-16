@@ -97,7 +97,7 @@ void fsmInitState(){
 
     case EXIT:
     {
-        goToFloor(3);
+        break;
     }
     
     default:
@@ -116,6 +116,7 @@ void fsmWaitingState(){
     case ENTRY:
     {
         hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+        goToFloor(3);
         break;
     }
     
