@@ -94,6 +94,11 @@ void fsmInitState(){
 
         break;
     }
+
+    case EXIT:
+    {
+        goToFloor(3);
+    }
     
     default:
         break;

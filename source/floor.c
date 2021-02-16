@@ -1,5 +1,6 @@
 #include "floor.h"
 #include "hardware.h"
+#include "fsm.h"
 #include <stddef.h>
 
 static uint8_t last_visited_floor;
@@ -67,15 +68,19 @@ inline static void runCallbackFunction(){
 static void move_until_floor_reached(){
     if(requested_floor >= NUM_FLOOR) return;
 
-    if(last_visited_floor == floor_num) {
+    if(last_visited_floor == requested_floor) {
         hardware_command_movement(HARDWARE_MOVEMENT_STOP);    
+        setFsmState(WAITING);
+        setOnFloorCallbackFunction(NULL);
         return;
     }
 
     //if the floor is above
-    if(last_visited_floor < floor_num){
+    if(last_visited_floor < requested_floor){
         hardware_command_movement(HARDWARE_MOVEMENT_UP);
-    } else if(last_visited_floor > floor_num){
+        setFsmState(DRIVE_UP);
+    } else if(last_visited_floor > requested_floor){
         hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+        setFsmState(DRIVE_DOWN);
     }
 }
