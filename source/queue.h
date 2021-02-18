@@ -23,6 +23,11 @@ typedef enum {
   PRIORITY_UP,
 } OrderPriority;
 
+typedef enum {
+  DIRECTION_UP,
+  DIRECTION_DOWN
+} OrderDirection;
+
 typedef struct FloorOrder FloorOrder;
 
 /**
@@ -30,7 +35,7 @@ typedef struct FloorOrder FloorOrder;
  * 
  */
 struct FloorOrder {
-  HardwareOrder direction;
+  OrderDirection direction;
   uint8_t toFloor;
   OrderPriority priority;
 
@@ -41,24 +46,24 @@ struct FloorOrder {
 /**
  * @brief Create a Floor Order object, will make next of prev to the new element
  * 
- * @param direction HardwareOrder the direction of the request
+ * @param direction OrderDirection the direction of the request
  * @param toFloor The requested floor
  * @param priority OrderPriority, which priority level it is
  * @param prev FloorOrder* Previous object in the linked list
  * @return FloorOrder* a new floor order in the linked list
  */
-FloorOrder* create_floor_order(HardwareOrder direction, uint8_t toFloor, OrderPriority priority, FloorOrder* prev);
+FloorOrder* create_floor_order(OrderDirection direction, uint8_t toFloor, OrderPriority priority, FloorOrder* prev);
 
 /**
  * @brief Create a Floor object and adds it in a sorted linked list, it assume the linked list is sorted before calling this function. The linked list will be sorted by priority, than direction, than floor
  * 
- * @param direction HardwareOrder the direction of the request
+ * @param direction OrderDirection the direction of the request
  * @param toFloor The requested floor
  * @param priority OrderPriority, which priority level it is
  * @param prev FloorOrder* Previous object in the linked list
  * @return FloorOrder* a new floor order in the linked list
  */
-FloorOrder* create_sorted_floor_order(HardwareOrder direction, uint8_t toFloor, OrderPriority priority);
+FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor, OrderPriority priority);
 
 /**
  * @brief Get the first floor order object in the linked list

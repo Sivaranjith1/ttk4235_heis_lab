@@ -7,7 +7,7 @@
 */
 static FloorOrder* first_floor_order = NULL;
 
-FloorOrder* create_floor_order(HardwareOrder direction, uint8_t toFloor, OrderPriority priority, FloorOrder* prev){
+FloorOrder* create_floor_order(OrderDirection direction, uint8_t toFloor, OrderPriority priority, FloorOrder* prev){
   FloorOrder* newFloor = malloc(sizeof(FloorOrder));
   newFloor->direction = direction;
   newFloor->priority = priority;
@@ -30,7 +30,7 @@ FloorOrder* create_floor_order(HardwareOrder direction, uint8_t toFloor, OrderPr
   return newFloor;
 }
 
-FloorOrder* create_sorted_floor_order(HardwareOrder direction, uint8_t toFloor, OrderPriority priority){
+FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor, OrderPriority priority){
   FloorOrder* newFloor = malloc(sizeof(FloorOrder));
   newFloor->direction = direction;
   newFloor->priority = priority;
@@ -46,30 +46,24 @@ FloorOrder* create_sorted_floor_order(HardwareOrder direction, uint8_t toFloor, 
     FloorOrder* prev = NULL;
 
     while(next != NULL){
-      if(next->priority > newFloor->priority || (next->priority == newFloor->priority && next->direction > newFloor->direction) || (next->priority == newFloor->priority && next->direction > newFloor->direction && newFloor->direction == HARDWARE_ORDER_UP && next->toFloor >= newFloor->toFloor) || (next->priority == newFloor->priority && next->direction > newFloor->direction && newFloor->direction == HARDWARE_ORDER_DOWN && next->toFloor <= newFloor->toFloor)){
-        printf("Next: ");
-        print_floor_order(next);
-        printf("NewFloor: ");
-        print_floor_order(newFloor);
-        if(1 || next->toFloor > newFloor->toFloor){
+      if(next->priority > newFloor->priority || (next->priority == newFloor->priority && next->direction > newFloor->direction) || (next->priority == newFloor->priority && next->direction == newFloor->direction && newFloor->direction == DIRECTION_UP && next->toFloor < newFloor->toFloor) || (next->priority == newFloor->priority && next->direction == newFloor->direction && newFloor->direction == DIRECTION_DOWN && next->toFloor > newFloor->toFloor)){
 
-          if(next == first_floor_order){
-            first_floor_order = newFloor;
-            newFloor->prev = NULL;
-            next->prev = newFloor;
-            newFloor->next = next;
-            break;
-          }
-
-          if(next->prev != NULL){
-            next->prev->next = newFloor;
-          }
-          newFloor->prev = next->prev;
-          newFloor->next = next;
+        if(next == first_floor_order){
+          first_floor_order = newFloor;
+          newFloor->prev = NULL;
           next->prev = newFloor;
-
+          newFloor->next = next;
           break;
         }
+
+        if(next->prev != NULL){
+          next->prev->next = newFloor;
+        }
+        newFloor->prev = next->prev;
+        newFloor->next = next;
+        next->prev = newFloor;
+
+        break;
       }
       prev = next;
       next = next->next;
