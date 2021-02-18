@@ -70,6 +70,11 @@ inline static void run_on_floor_callback_function(){
     (*p_onFloorCallback)();
 }
 
+/**
+ * @brief move up if below @c{requested_floor} and move down if above. Will stop and change state when @c{last_visited_floor} is equal to @c{requested floor}.
+ * @note This should be called everytime @c{last_visited_floor} is changed
+ * 
+ */
 static void move_until_floor_reached(){
     if(requested_floor >= NUM_FLOOR) return;
 
