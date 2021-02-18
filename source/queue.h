@@ -19,7 +19,8 @@
  * 
  */
 typedef enum {
-  Priority_Inside
+  PRIORITY_INSIDE,
+  PRIORITY_UP,
 } OrderPriority;
 
 typedef struct FloorOrder FloorOrder;
@@ -49,6 +50,17 @@ struct FloorOrder {
 FloorOrder* create_floor_order(HardwareOrder direction, uint8_t toFloor, OrderPriority priority, FloorOrder* prev);
 
 /**
+ * @brief Create a Floor object and adds it in a sorted linked list, it assume the linked list is sorted before calling this function. The linked list will be sorted by priority, than direction, than floor
+ * 
+ * @param direction HardwareOrder the direction of the request
+ * @param toFloor The requested floor
+ * @param priority OrderPriority, which priority level it is
+ * @param prev FloorOrder* Previous object in the linked list
+ * @return FloorOrder* a new floor order in the linked list
+ */
+FloorOrder* create_sorted_floor_order(HardwareOrder direction, uint8_t toFloor, OrderPriority priority);
+
+/**
  * @brief Get the first floor order object in the linked list
  * 
  * @return FloorOrder* the first element in the linked list
@@ -67,5 +79,18 @@ void delete_floor_order(FloorOrder* order_to_delete);
  * 
  */
 void clear_all_floor_order();
+
+/**
+ * @brief Print for a floor order
+ * 
+ * @param order_to_print The floor order to print
+ */
+void print_floor_order(FloorOrder* order_to_print);
+
+/**
+ * @brief Print every Floor Object in the linked list
+ * 
+ */
+void print_all_floor_orders();
 
 #endif

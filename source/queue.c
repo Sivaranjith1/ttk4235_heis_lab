@@ -2,6 +2,9 @@
 #include <stdio.h>
 #include <stdlib.h>
 
+/**
+ * @brief The head of the linked list
+*/
 static FloorOrder* first_floor_order = NULL;
 
 FloorOrder* create_floor_order(HardwareOrder direction, uint8_t toFloor, OrderPriority priority, FloorOrder* prev){
@@ -27,11 +30,69 @@ FloorOrder* create_floor_order(HardwareOrder direction, uint8_t toFloor, OrderPr
   return newFloor;
 }
 
+FloorOrder* create_sorted_floor_order(HardwareOrder direction, uint8_t toFloor, OrderPriority priority){
+  FloorOrder* newFloor = malloc(sizeof(FloorOrder));
+  newFloor->direction = direction;
+  newFloor->priority = priority;
+  newFloor->toFloor = toFloor;
+
+  if(first_floor_order == NULL){
+    newFloor->prev = NULL;
+    newFloor->next = NULL;
+
+    first_floor_order = newFloor;
+  } else {
+    FloorOrder* next = first_floor_order;
+    FloorOrder* prev = NULL;
+
+    while(next != NULL){
+      if(next->priority > newFloor->priority || (next->priority == newFloor->priority && next->direction > newFloor->direction) || (next->priority == newFloor->priority && next->direction > newFloor->direction && newFloor->direction == HARDWARE_ORDER_UP && next->toFloor >= newFloor->toFloor) || (next->priority == newFloor->priority && next->direction > newFloor->direction && newFloor->direction == HARDWARE_ORDER_DOWN && next->toFloor <= newFloor->toFloor)){
+        printf("Next: ");
+        print_floor_order(next);
+        printf("NewFloor: ");
+        print_floor_order(newFloor);
+        if(1 || next->toFloor > newFloor->toFloor){
+
+          if(next == first_floor_order){
+            first_floor_order = newFloor;
+            newFloor->prev = NULL;
+            next->prev = newFloor;
+            newFloor->next = next;
+            break;
+          }
+
+          if(next->prev != NULL){
+            next->prev->next = newFloor;
+          }
+          newFloor->prev = next->prev;
+          newFloor->next = next;
+          next->prev = newFloor;
+
+          break;
+        }
+      }
+      prev = next;
+      next = next->next;
+    }
+
+    if(next == NULL){
+      prev->next = newFloor;
+      newFloor->prev = prev;
+    }
+  }
+
+  return newFloor;
+}
+
 FloorOrder* get_first_floor_order(){
   return first_floor_order;
 }
 
 void delete_floor_order(FloorOrder* order_to_delete){
+
+  if(order_to_delete == first_floor_order){
+    first_floor_order = order_to_delete->next;
+  }
 
   if(order_to_delete->prev != NULL){
     order_to_delete->prev->next = order_to_delete->next;
@@ -60,5 +121,21 @@ void clear_all_floor_order(){
   }
 
   free(currentElem);
+  free(next);
+
+  first_floor_order = NULL;
+}
+
+void print_floor_order(FloorOrder* order_to_print){
+  printf("Priority %d, direction %d, toFloor %d\n", order_to_print->priority, order_to_print->direction, order_to_print->toFloor);
+}
+
+void print_all_floor_orders(){
+  FloorOrder* next = first_floor_order;
+  while(next != NULL){
+    print_floor_order(next);
+    next = next->next;
+  }
+
   free(next);
 }
