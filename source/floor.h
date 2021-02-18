@@ -17,6 +17,17 @@
 #define NUM_FLOOR 4U
 
 /**
+ * @brief Enum with all the valid floors
+ * 
+ */
+typedef enum {
+    FLOOR1,
+    FLOOR2,
+    FLOOR3,
+    FLOOR4
+} ALL_FLOORS;
+
+/**
  * @brief Initialize the state of floor. Will drive up until it reaches a valid floor
  */
 void floor_init();
@@ -28,14 +39,14 @@ void floor_init();
  * 
  * @return uint8_t the last visited floor
  */
-uint8_t getLastVisitedFloor();
+ALL_FLOORS get_last_visited_floor();
 
 /**
  * @brief Drive up to the desired floor
  * 
  * @param floor_num the floor that is desired
  */
-void goToFloor(uint8_t floor_num);
+void go_to_floor(ALL_FLOORS floor_num);
 
 /**
  * @brief Set the Last Visited Floor object when detecting a sensor update
@@ -48,6 +59,6 @@ void set_last_visited_floor();
  * 
  * @param callback_ptr The function pointer to call
  */
-void setOnFloorCallbackFunction(void (*callback_ptr)());
+void set_on_floor_callback_function(void (*callback_ptr)());
 
 #endif

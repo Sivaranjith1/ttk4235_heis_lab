@@ -46,17 +46,17 @@ void set_last_visited_floor(){
     }
 }
 
-uint8_t getLastVisitedFloor(){
+ALL_FLOORS get_last_visited_floor(){
     return last_visited_floor;
 }
 
-void goToFloor(uint8_t floor_num){
+void go_to_floor(ALL_FLOORS floor_num){
     requested_floor = floor_num;
-    setOnFloorCallbackFunction(&move_until_floor_reached);
+    set_on_floor_callback_function(&move_until_floor_reached);
     p_onFloorCallback();
 }
 
-void setOnFloorCallbackFunction(void (*callback_ptr)()){
+void set_on_floor_callback_function(void (*callback_ptr)()){
     p_onFloorCallback = callback_ptr;
 }
 
@@ -81,7 +81,7 @@ static void move_until_floor_reached(){
     if(last_visited_floor == requested_floor) {
         hardware_command_movement(HARDWARE_MOVEMENT_STOP);    
         setFsmState(WAITING);
-        setOnFloorCallbackFunction(NULL);
+        set_on_floor_callback_function(NULL);
         return;
     }
 
