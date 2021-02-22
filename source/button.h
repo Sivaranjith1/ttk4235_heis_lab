@@ -14,6 +14,7 @@
 #define BUTTON_H
 
 #include "hardware.h"
+#include "queue.h"
 #include <time.h>
 #include <stdint.h>
 
