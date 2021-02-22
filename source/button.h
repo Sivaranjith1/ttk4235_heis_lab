@@ -42,7 +42,7 @@ inline void on_obstruction_press();
  * @param floor 
  * @param order_type 
  */
-void on_external_order_button_press(int floor, HardwareOrder order_type);
+void on_external_order_button_press(uint8_t floor, HardwareOrder order_type);
 
 
 /**
@@ -50,7 +50,7 @@ void on_external_order_button_press(int floor, HardwareOrder order_type);
  * 
  * @param floor 
  */
-void on_internal_order_button_press(int floor);
+void on_internal_order_button_press(uint8_t floor);
 
 
 /**

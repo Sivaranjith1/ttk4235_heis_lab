@@ -3,7 +3,7 @@
 
 inline void on_stop_button_press(){
     hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-    queue_delete_all();
+    queue_clear();
 }
 
 inline void on_obstruction_press(time_t* current_time){
@@ -33,6 +33,10 @@ uint8_t check_buttons_pressed(){
    }
 }
 
-void on_external_order_button_press(int floor, HardwareOrder order_type){
+void on_external_order_button_press(uint8_t floor, HardwareOrder order_type){
+}
 
+void on_internal_order_button_press(uint8_t floor){
+    queue_add_element(floor, PRIORITY_INSIDE, DIRECTION_INSIDE);
+    hardware_command_order_light(floor, HARDWARE_ORDER_INSIDE, 1);
 }
