@@ -11,6 +11,7 @@ static void (*p_onFloorCallback)();
 
 inline static void run_on_floor_callback_function();
 static void move_until_floor_reached();
+static void set_on_floor_callback_function(void (*callback_ptr)());
 
 void floor_init(){
     door_open = 0;
@@ -56,7 +57,12 @@ void go_to_floor(ALL_FLOORS floor_num){
     p_onFloorCallback();
 }
 
-void set_on_floor_callback_function(void (*callback_ptr)()){
+/**
+ * @brief Set the On Floor Callback Function that is called each time a floor is passed
+ * 
+ * @param callback_ptr The function pointer to call
+ */
+static void set_on_floor_callback_function(void (*callback_ptr)()){
     p_onFloorCallback = callback_ptr;
 }
 

@@ -54,11 +54,5 @@ void go_to_floor(ALL_FLOORS floor_num);
  */
 void set_last_visited_floor();
 
-/**
- * @brief Set the On Floor Callback Function that is called each time a floor is passed
- * 
- * @param callback_ptr The function pointer to call
- */
-void set_on_floor_callback_function(void (*callback_ptr)());
 
 #endif
