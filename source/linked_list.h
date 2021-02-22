@@ -9,8 +9,8 @@
  * 
  */
 
-#ifndef QUEUE_H
-#define QUEUE_H
+#ifndef LINKED_LIST_H
+#define LINKED_LIST_H
 #include <stdint.h>
 #include "hardware.h"
 

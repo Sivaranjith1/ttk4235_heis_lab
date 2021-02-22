@@ -1,4 +1,4 @@
-#include "queue.h"
+#include "linked_list.h"
 #include <stdio.h>
 #include <stdlib.h>
 
@@ -46,7 +46,10 @@ FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor,
     FloorOrder* prev = NULL;
 
     while(next != NULL){
-      if(next->priority > newFloor->priority || (next->priority == newFloor->priority && next->direction > newFloor->direction) || (next->priority == newFloor->priority && next->direction == newFloor->direction && newFloor->direction == DIRECTION_UP && next->toFloor < newFloor->toFloor) || (next->priority == newFloor->priority && next->direction == newFloor->direction && newFloor->direction == DIRECTION_DOWN && next->toFloor > newFloor->toFloor)){
+      if(next->priority > newFloor->priority 
+        || (next->priority == newFloor->priority && next->direction > newFloor->direction) 
+        || (next->priority == newFloor->priority && next->direction == newFloor->direction && next->toFloor < newFloor->toFloor) 
+        ){
 
         if(next == first_floor_order){
           first_floor_order = newFloor;
