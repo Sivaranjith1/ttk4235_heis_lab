@@ -12,12 +12,13 @@ typedef enum {
     NONE
 } UNDER_STATE;
 
-static STATE current_state;
-static UNDER_STATE current_under_state;
+static volatile STATE current_state;
+static volatile UNDER_STATE current_under_state;
 
-void fsmInitState();
-void fsmWaitingState();
-void fsmDoorOpenState();
+static void fsmInitState();
+static void fsmWaitingState();
+static void fsmDoorOpenState();
+static void fsmRunInner();
 
 void fsm_init(){
     current_state = INITIALIZE;
@@ -30,18 +31,23 @@ STATE getFsmState() {
 
 void setFsmState(STATE newState){
     current_under_state = EXIT;
-    fsmRun();
+    fsmRunInner();
 
     current_state = newState;
     current_under_state = ENTRY;
-    fsmRun();
+    fsmRunInner();
 
     current_under_state = NONE;
 }
 
 void fsmRun() {
     while(1) {
-        switch (current_state)
+        fsmRunInner();
+    }
+}
+
+static void fsmRunInner() {
+    switch (current_state)
         {
         case INITIALIZE:
         {
@@ -77,14 +83,13 @@ void fsmRun() {
         default:
             break;
         }
-    }
 }
 
 /**
  * @brief The underlaying finite state machine within the state of Initialize
  * 
  */
-void fsmInitState(){
+static void fsmInitState(){
     switch (current_under_state)
     {
     case ENTRY:
@@ -110,7 +115,7 @@ void fsmInitState(){
  * @brief The underlaying finite state machine within the state of Waiting
  * 
  */
-void fsmWaitingState(){
+static void fsmWaitingState(){
     switch (current_under_state)
     {
     case ENTRY:
@@ -129,7 +134,7 @@ void fsmWaitingState(){
  * @brief The underlaying finite state machine within the state of Door open
  * 
  */
-void fsmDoorOpenState(){
+static void fsmDoorOpenState(){
     switch (current_under_state)
     {
     case ENTRY:
