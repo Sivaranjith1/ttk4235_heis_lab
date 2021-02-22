@@ -53,10 +53,11 @@ ALL_FLOORS get_last_visited_floor(){
     return last_visited_floor;
 }
 
-void go_to_floor(ALL_FLOORS floor_num){
+MOTOR_MOVEMENT go_to_floor(ALL_FLOORS floor_num){
     requested_floor = floor_num;
     set_on_floor_callback_function(&move_until_floor_reached);
     p_onFloorCallback();
+    return direction;
 }
 
 /**

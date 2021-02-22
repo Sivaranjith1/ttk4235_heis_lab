@@ -51,8 +51,10 @@ ALL_FLOORS get_last_visited_floor();
  * @brief Drive up to the desired floor
  * 
  * @param floor_num the floor that is desired
+ * 
+ * @return MOTOR_MOVEMENT The direction it is currently traveling
  */
-void go_to_floor(ALL_FLOORS floor_num);
+MOTOR_MOVEMENT go_to_floor(ALL_FLOORS floor_num);
 
 /**
  * @brief Set the Last Visited Floor object when detecting a sensor update
