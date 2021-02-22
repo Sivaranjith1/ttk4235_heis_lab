@@ -27,6 +27,12 @@ typedef enum {
     FLOOR4
 } ALL_FLOORS;
 
+typedef enum {
+    MOVEMENT_STILL,
+    MOVEMENT_UP,
+    MOVEMENT_DOWN
+} MOTOR_MOVEMENT;
+
 /**
  * @brief Initialize the state of floor. Will drive up until it reaches a valid floor
  */
@@ -51,8 +57,9 @@ void go_to_floor(ALL_FLOORS floor_num);
 /**
  * @brief Set the Last Visited Floor object when detecting a sensor update
  * 
+ * @return MOTOR_MOVEMENT The direction it is currently traveling
  */
-void set_last_visited_floor();
+MOTOR_MOVEMENT set_last_visited_floor();
 
 
 #endif

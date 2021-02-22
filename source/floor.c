@@ -1,11 +1,11 @@
 #include "floor.h"
 #include "hardware.h"
-#include "fsm.h"
 #include <stdio.h>
 
 static uint8_t last_visited_floor;
 static uint8_t door_open;
 static uint8_t requested_floor = NUM_FLOOR;
+static MOTOR_MOVEMENT direction = MOVEMENT_STILL;
 
 static void (*p_onFloorCallback)();
 
@@ -34,7 +34,7 @@ void floor_init(){
     }
 }
 
-void set_last_visited_floor(){
+MOTOR_MOVEMENT set_last_visited_floor(){
     
     if(last_visited_floor != 0 && hardware_read_floor_sensor(last_visited_floor - 1)){
         last_visited_floor --;
@@ -45,6 +45,8 @@ void set_last_visited_floor(){
         last_visited_floor ++;
         run_on_floor_callback_function();
     }
+
+    return direction;
 }
 
 ALL_FLOORS get_last_visited_floor(){
@@ -86,7 +88,7 @@ static void move_until_floor_reached(){
 
     if(last_visited_floor == requested_floor) {
         hardware_command_movement(HARDWARE_MOVEMENT_STOP);    
-        setFsmState(WAITING);
+        direction = MOVEMENT_STILL;
         set_on_floor_callback_function(NULL);
         return;
     }
@@ -94,9 +96,9 @@ static void move_until_floor_reached(){
     //if the floor is above
     if(last_visited_floor < requested_floor){
         hardware_command_movement(HARDWARE_MOVEMENT_UP);
-        setFsmState(DRIVE_UP);
+        direction = MOVEMENT_UP;
     } else if(last_visited_floor > requested_floor){
         hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-        setFsmState(DRIVE_DOWN);
+        direction = MOVEMENT_DOWN;
     }
 }
