@@ -1,4 +1,6 @@
 #include "fsm.h"
+#include "floor.h"
+#include "hardware.h"
 
 /**
  * @brief Under states such as entry exit for the states under
@@ -10,15 +12,17 @@ typedef enum {
     NONE
 } UNDER_STATE;
 
-static STATE current_state;
-static UNDER_STATE current_under_state;
+static volatile STATE current_state;
+static volatile UNDER_STATE current_under_state;
 
-void fsmWaitingState();
-void fsmDoorOpenState();
+static void fsmInitState();
+static void fsmWaitingState();
+static void fsmDoorOpenState();
+static void fsmRunInner();
 
 void fsm_init(){
     current_state = INITIALIZE;
-    current_under_state = NONE;
+    current_under_state = ENTRY;
 }
 
 STATE getFsmState() {
@@ -27,22 +31,27 @@ STATE getFsmState() {
 
 void setFsmState(STATE newState){
     current_under_state = EXIT;
-    fsmRun();
+    fsmRunInner();
 
     current_state = newState;
     current_under_state = ENTRY;
-    fsmRun();
+    fsmRunInner();
 
     current_under_state = NONE;
 }
 
 void fsmRun() {
     while(1) {
-        switch (current_state)
+        fsmRunInner();
+    }
+}
+
+static void fsmRunInner() {
+    switch (current_state)
         {
         case INITIALIZE:
         {
-
+            fsmInitState();
             /* code */
             break;
         }
@@ -50,14 +59,14 @@ void fsmRun() {
         case DRIVE_UP:
         {
 
-            /* code */
+            set_last_visited_floor();
             break;
         }
 
         case DRIVE_DOWN:
         {
 
-            /* code */
+            set_last_visited_floor();
             break;
         }
 
@@ -74,18 +83,45 @@ void fsmRun() {
         default:
             break;
         }
+}
+
+/**
+ * @brief The underlaying finite state machine within the state of Initialize
+ * 
+ */
+static void fsmInitState(){
+    switch (current_under_state)
+    {
+    case ENTRY:
+    {
+        floor_init();
+        setFsmState(WAITING);
+
+        break;
+    }
+
+    case EXIT:
+    {
+        break;
+    }
+    
+    default:
+        break;
     }
 }
+
 
 /**
  * @brief The underlaying finite state machine within the state of Waiting
  * 
  */
-void fsmWaitingState(){
+static void fsmWaitingState(){
     switch (current_under_state)
     {
     case ENTRY:
     {
+        hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+        go_to_floor(FLOOR1);
         break;
     }
     
@@ -98,7 +134,7 @@ void fsmWaitingState(){
  * @brief The underlaying finite state machine within the state of Door open
  * 
  */
-void fsmDoorOpenState(){
+static void fsmDoorOpenState(){
     switch (current_under_state)
     {
     case ENTRY:

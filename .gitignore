@@ -1,4 +1,5 @@
 html/
 latex/
-build/*
+build/
 library/
+elevator
