@@ -59,14 +59,14 @@ static void fsmRunInner() {
         case DRIVE_UP:
         {
 
-            set_last_visited_floor();
+            if(set_last_visited_floor() == MOVEMENT_STILL) setFsmState(WAITING);
             break;
         }
 
         case DRIVE_DOWN:
         {
 
-            set_last_visited_floor();
+            if(set_last_visited_floor() == MOVEMENT_STILL) setFsmState(WAITING);
             break;
         }
 
@@ -121,7 +121,20 @@ static void fsmWaitingState(){
     case ENTRY:
     {
         hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-        go_to_floor(FLOOR1);
+
+        MOTOR_MOVEMENT direction = go_to_floor(FLOOR1);
+        switch (direction)
+        {
+        case MOVEMENT_UP:
+            setFsmState(DRIVE_UP);
+            break;
+        case MOVEMENT_DOWN:
+            setFsmState(DRIVE_DOWN);
+            break;
+        
+        default:
+            break;
+        }
         break;
     }
     
