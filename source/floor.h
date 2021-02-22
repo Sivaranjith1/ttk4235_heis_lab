@@ -27,6 +27,12 @@ typedef enum {
     FLOOR4
 } ALL_FLOORS;
 
+typedef enum {
+    MOVEMENT_STILL,
+    MOVEMENT_UP,
+    MOVEMENT_DOWN
+} MOTOR_MOVEMENT;
+
 /**
  * @brief Initialize the state of floor. Will drive up until it reaches a valid floor
  */
@@ -45,20 +51,17 @@ ALL_FLOORS get_last_visited_floor();
  * @brief Drive up to the desired floor
  * 
  * @param floor_num the floor that is desired
+ * 
+ * @return MOTOR_MOVEMENT The direction it is currently traveling
  */
-void go_to_floor(ALL_FLOORS floor_num);
+MOTOR_MOVEMENT go_to_floor(ALL_FLOORS floor_num);
 
 /**
  * @brief Set the Last Visited Floor object when detecting a sensor update
  * 
+ * @return MOTOR_MOVEMENT The direction it is currently traveling
  */
-void set_last_visited_floor();
+MOTOR_MOVEMENT set_last_visited_floor();
 
-/**
- * @brief Set the On Floor Callback Function that is called each time a floor is passed
- * 
- * @param callback_ptr The function pointer to call
- */
-void set_on_floor_callback_function(void (*callback_ptr)());
 
 #endif
