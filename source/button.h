@@ -10,8 +10,8 @@
  */
 
 
-#ifndef BUTTON.H
-#define BUTTON.H
+#ifndef BUTTON_H
+#define BUTTON_H
 #include "hardware.h"
 #include "linked_list.h"
 #include "fsm.h"
@@ -21,7 +21,7 @@
 #define STOP_BUTON_PRESSED 1
 #define OBSTRUCTION_BUTTON_PRESSED 2
 /**
- * @brief Handles the stop button. When called it stops the elevator, clears the queue of all orders and prevents new orders.
+ * @brief Handles the stop button. When called it stops the elevator, clears the queue of all orders.
  * 
  */
 void on_stop_button_press();
