@@ -13,9 +13,13 @@
 #ifndef BUTTON.H
 #define BUTTON.H
 #include "hardware.h"
-#include "queue.h"
+#include "linked_list.h"
 #include "fsm.h"
+#include <time.h>
 
+
+#define STOP_BUTON_PRESSED 1
+#define OBSTRUCTION_BUTTON_PRESSED 2
 /**
  * @brief Handles the stop button. When called it stops the elevator, clears the queue of all orders and prevents new orders.
  * 
@@ -57,6 +61,7 @@ void button_init();
 /**
  * @brief 
  * 
+ * @return uint8_t 
  */
-void check_buttons_pressed();
+uint8_t check_buttons_pressed();
 #endif
