@@ -6,7 +6,8 @@
  * @brief Under states such as entry exit for the states under
  * 
  */
-typedef enum {
+typedef enum
+{
     ENTRY,
     EXIT,
     NONE
@@ -15,21 +16,29 @@ typedef enum {
 static volatile STATE current_state;
 static volatile UNDER_STATE current_under_state;
 
+static uint8_t floor_temp = 0; //need to remove
+
 static void fsmInitState();
 static void fsmWaitingState();
 static void fsmDoorOpenState();
+static void fsm_drive_up();
+static void fsm_drive_down();
+
 static void fsmRunInner();
 
-void fsm_init(){
+void fsm_init()
+{
     current_state = INITIALIZE;
     current_under_state = ENTRY;
 }
 
-STATE getFsmState() {
+STATE getFsmState()
+{
     return current_state;
 }
 
-void setFsmState(STATE newState){
+void setFsmState(STATE newState)
+{
     current_under_state = EXIT;
     fsmRunInner();
 
@@ -40,56 +49,59 @@ void setFsmState(STATE newState){
     current_under_state = NONE;
 }
 
-void fsmRun() {
-    while(1) {
+void fsmRun()
+{
+    while (1)
+    {
         fsmRunInner();
     }
 }
 
-static void fsmRunInner() {
+static void fsmRunInner()
+{
     switch (current_state)
-        {
-        case INITIALIZE:
-        {
-            fsmInitState();
-            /* code */
-            break;
-        }
+    {
+    case INITIALIZE:
+    {
+        fsmInitState();
+        /* code */
+        break;
+    }
 
-        case DRIVE_UP:
-        {
-
-            if(set_last_visited_floor() == MOVEMENT_STILL) setFsmState(WAITING);
-            break;
-        }
-
-        case DRIVE_DOWN:
-        {
-
-            if(set_last_visited_floor() == MOVEMENT_STILL) setFsmState(WAITING);
-            break;
-        }
-
-        case WAITING:
-        {
-            fsmWaitingState();
-            break;
-        }
-
-        case DOOR_OPEN:
-            /* code */
-            break;
+    case DRIVE_UP:
+    {
+        fsm_drive_up();
         
-        default:
-            break;
-        }
+        break;
+    }
+
+    case DRIVE_DOWN:
+    {
+        fsm_drive_down();
+        break;
+    }
+
+    case WAITING:
+    {
+        fsmWaitingState();
+        break;
+    }
+
+    case DOOR_OPEN:
+        /* code */
+        break;
+
+    default:
+        break;
+    }
 }
 
 /**
  * @brief The underlaying finite state machine within the state of Initialize
  * 
  */
-static void fsmInitState(){
+static void fsmInitState()
+{
     switch (current_under_state)
     {
     case ENTRY:
@@ -104,25 +116,26 @@ static void fsmInitState(){
     {
         break;
     }
-    
+
     default:
         break;
     }
 }
 
-
 /**
  * @brief The underlaying finite state machine within the state of Waiting
  * 
  */
-static void fsmWaitingState(){
+static void fsmWaitingState()
+{
     switch (current_under_state)
     {
     case ENTRY:
     {
-        hardware_command_movement(HARDWARE_MOVEMENT_STOP);
+        //hardware_command_movement(HARDWARE_MOVEMENT_STOP);
 
-        MOTOR_MOVEMENT direction = go_to_floor(FLOOR1);
+        MOTOR_MOVEMENT direction = go_to_floor(floor_temp++);
+        if(floor_temp >= 4) floor_temp = 0;
         switch (direction)
         {
         case MOVEMENT_UP:
@@ -131,13 +144,13 @@ static void fsmWaitingState(){
         case MOVEMENT_DOWN:
             setFsmState(DRIVE_DOWN);
             break;
-        
+
         default:
             break;
         }
         break;
     }
-    
+
     default:
         break;
     }
@@ -147,7 +160,8 @@ static void fsmWaitingState(){
  * @brief The underlaying finite state machine within the state of Door open
  * 
  */
-static void fsmDoorOpenState(){
+static void fsmDoorOpenState()
+{
     switch (current_under_state)
     {
     case ENTRY:
@@ -157,12 +171,65 @@ static void fsmDoorOpenState(){
         break;
     }
 
-    case EXIT: 
+    case EXIT:
     {
         break;
     }
-    
+
     default:
         break;
+    }
+}
+
+static void fsm_drive_up()
+{
+    switch (current_under_state)
+    {
+    case ENTRY:
+    {
+
+        /* code */
+        break;
+    }
+
+    case EXIT:
+    {
+        break;
+    }
+
+    default:
+    {
+        if (set_last_visited_floor() == MOVEMENT_STILL)
+        {
+            setFsmState(WAITING);
+        }
+        break;
+    }
+    }
+}
+
+static void fsm_drive_down(){
+    switch (current_under_state)
+    {
+    case ENTRY:
+    {
+
+        /* code */
+        break;
+    }
+
+    case EXIT:
+    {
+        break;
+    }
+
+    default:
+    {
+        if (set_last_visited_floor() == MOVEMENT_STILL)
+        {
+            setFsmState(WAITING);
+        }
+        break;
+    }
     }
 }
