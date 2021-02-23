@@ -35,6 +35,10 @@ void fsm_init()
 {
     current_state = INITIALIZE;
     current_under_state = ENTRY;  
+
+    queue_add_element(4, PRIORITY_INSIDE, DIRECTION_INSIDE);
+    queue_add_element(3, PRIORITY_OUTSIDE, DIRECTION_INSIDE);
+    print_all_floor_orders();
 }
 
 STATE get_fsm_state()
@@ -142,25 +146,31 @@ static void fsm_waiting_state()
         {
             hardware_command_movement(HARDWARE_MOVEMENT_STOP);
 
-            MOTOR_MOVEMENT direction = go_to_floor(floor_temp++);
-            if(floor_temp >= 4) floor_temp = 0;
-            switch (direction)
-            {
-            case MOVEMENT_UP:
-                set_fsm_state(DRIVE_UP);
-                break;
-            case MOVEMENT_DOWN:
-                set_fsm_state(DRIVE_DOWN);
-                break;
+            // MOTOR_MOVEMENT direction = go_to_floor(floor_temp++);
+            // if(floor_temp >= 4) floor_temp = 0;
+            // switch (direction)
+            // {
+            // case MOVEMENT_UP:
+            //     set_fsm_state(DRIVE_UP);
+            //     break;
+            // case MOVEMENT_DOWN:
+            //     set_fsm_state(DRIVE_DOWN);
+            //     break;
 
-            default:
-                break;
-            }
+            // default:
+            //     break;
+            // }
             break;
         }
 
         default:
         {   
+            //find the next floor to move to
+            FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_STILL);
+            if(next_floor != NULL){
+                go_to_floor(next_floor->toFloor);
+            }
+
             //Check if the elevator is moving 
             switch (set_last_visited_floor())
             {
@@ -173,12 +183,6 @@ static void fsm_waiting_state()
 
             default:
                 break;
-            }
-
-            //find the next floor to move to
-            FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_STILL);
-            if(next_floor != NULL){
-                go_to_floor(next_floor->toFloor);
             }
             break;
         }
