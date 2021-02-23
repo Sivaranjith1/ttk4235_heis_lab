@@ -45,7 +45,7 @@ FloorOrder *queue_get_next_floor_order(uint8_t current_floor, QueueDirection cur
             }
         }
 
-        else if(current_direction == QUEUE_DIRECTION_DOWN){
+        else if(current_direction == QUEUE_DIRECTION_DOWN || current_direction== QUEUE_DIRECTION_STILL){
 
             if((priority != current_list_element->priority) || (current_list_element->toFloor >= current_floor)){
                 return current_list_element->prev;
@@ -58,4 +58,8 @@ FloorOrder *queue_get_next_floor_order(uint8_t current_floor, QueueDirection cur
 
         current_list_element = current_list_element->next;
     }
+}
+
+inline void queue_delete_on_floor(uint8_t floor){
+    delete_floor_order_on_floor(floor);
 }

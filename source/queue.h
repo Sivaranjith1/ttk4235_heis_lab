@@ -17,7 +17,8 @@
 
 typedef enum{
     QUEUE_DIRECTION_UP,
-    QUEUE_DIRECTION_DOWN
+    QUEUE_DIRECTION_DOWN,
+    QUEUE_DIRECTION_STILL
 } QueueDirection;
 
 /**
@@ -51,4 +52,12 @@ FloorOrder* queue_get_next_floor_order(uint8_t current_floor, QueueDirection cur
  * @param floor_order The floor order object to delete
  */
 inline void queue_delete_element(FloorOrder* floor_order);
+
+/**
+ * @brief Deletes all floor orders on the given floor @p{floor}
+ * 
+ * @param floor The floor to delete from
+ */
+inline void queue_delete_on_floor(uint8_t floor);
+
 #endif
