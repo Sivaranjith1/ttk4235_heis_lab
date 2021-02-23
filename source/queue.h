@@ -13,7 +13,6 @@
 #define QUEUE_H
 
 #include "linked_list.h"
-#include <stdio.h>
 
 typedef enum{
     QUEUE_DIRECTION_UP,
@@ -29,13 +28,13 @@ typedef enum{
  * @param direction The direction the button press is. Inside, Up or Down
  * @return FloorOrder* Return the new FloorOrder element created
  */
-inline FloorOrder *queue_add_element(uint8_t to_floor, OrderPriority priority, OrderDirection direction);
+FloorOrder *queue_add_element(uint8_t to_floor, OrderPriority priority, OrderDirection direction);
 
 /**
  * @brief Delete all orders in the linked list
  * 
  */
-inline void queue_clear();
+void queue_clear();
 
 /**
  * @brief Gets the next floor to go to given the direction and current floor
@@ -47,17 +46,19 @@ inline void queue_clear();
 FloorOrder* queue_get_next_floor_order(uint8_t current_floor, QueueDirection current_direction);
 
 /**
- * @brief Delete a given floor order object
- * 
- * @param floor_order The floor order object to delete
- */
-inline void queue_delete_element(FloorOrder* floor_order);
-
-/**
  * @brief Deletes all floor orders on the given floor @p{floor}
  * 
  * @param floor The floor to delete from
  */
-inline void queue_delete_on_floor(uint8_t floor);
+void queue_delete_orders_at_floor(uint8_t floor);
+
+/**
+ * @brief Delete a given floor order object
+ * 
+ * @param floor_order The floor order object to delete
+ */
+void queue_delete_element(FloorOrder* floor_order);
+
+
 
 #endif

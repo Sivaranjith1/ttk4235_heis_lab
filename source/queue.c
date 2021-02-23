@@ -1,14 +1,15 @@
-#include "queue.h"
+#include <queue.h>
+#include <stdio.h>
 
-inline void queue_delete_element(FloorOrder *floor_order){
+void queue_delete_element(FloorOrder *floor_order){
     delete_floor_order(floor_order);
 }
 
-inline void queue_clear(){
+void queue_clear(){
     clear_all_floor_order();
 }
 
-inline FloorOrder *queue_add_element(uint8_t to_floor, OrderPriority priority, OrderDirection direction)
+FloorOrder *queue_add_element(uint8_t to_floor, OrderPriority priority, OrderDirection direction)
 {
     return create_sorted_floor_order(direction, to_floor, priority);
 }
@@ -60,6 +61,6 @@ FloorOrder *queue_get_next_floor_order(uint8_t current_floor, QueueDirection cur
     }
 }
 
-inline void queue_delete_on_floor(uint8_t floor){
+void queue_delete_orders_at_floor(uint8_t floor){
     delete_floor_order_on_floor(floor);
 }
