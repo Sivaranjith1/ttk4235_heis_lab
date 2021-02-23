@@ -103,6 +103,22 @@ void delete_floor_order(FloorOrder* order_to_delete){
   order_to_delete = NULL;
 }
 
+void delete_floor_order_on_floor(uint8_t floor){
+  FloorOrder* next = first_floor_order;
+
+  while(1){
+    if(next == NULL) return;
+
+    if(next->toFloor == floor){
+      FloorOrder* prev = next->prev;
+      delete_floor_order(next);
+      next = prev;
+    } else {
+      next = next->next;
+    }
+  }
+}
+
 void clear_all_floor_order(){
   if(first_floor_order == NULL) return;
   FloorOrder* currentElem = first_floor_order;
