@@ -18,53 +18,58 @@ static volatile UNDER_STATE current_under_state;
 
 static uint8_t floor_temp = 0; //need to remove
 
-static void fsmInitState();
-static void fsmWaitingState();
-static void fsmDoorOpenState();
+static void fsm_init_state();
+static void fsm_waiting_state();
+static void fsm_door_open_state();
 static void fsm_drive_up();
 static void fsm_drive_down();
 
-static void fsmRunInner();
+
+static void fsm_on_floor_reached();
+static void fsm_run_inner();
 
 void fsm_init()
 {
     current_state = INITIALIZE;
-    current_under_state = ENTRY;
+    current_under_state = ENTRY;    
 }
 
-STATE getFsmState()
+STATE get_fsm_state()
 {
     return current_state;
 }
 
-void setFsmState(STATE newState)
+void set_fsm_state(STATE newState)
 {
     current_under_state = EXIT;
-    fsmRunInner();
+    fsm_run_inner();
 
     current_state = newState;
     current_under_state = ENTRY;
-    fsmRunInner();
+    fsm_run_inner();
 
     current_under_state = NONE;
 }
 
-void fsmRun()
+void fsm_run()
 {
     while (1)
     {
-        fsmRunInner();
+        fsm_run_inner();
     }
 }
 
-static void fsmRunInner()
+/**
+ * @brief The main state machine that runs in a while loop in $c{fsm_run}
+ * 
+ */
+static void fsm_run_inner()
 {
     switch (current_state)
     {
     case INITIALIZE:
     {
-        fsmInitState();
-        /* code */
+        fsm_init_state();
         break;
     }
 
@@ -83,12 +88,12 @@ static void fsmRunInner()
 
     case WAITING:
     {
-        fsmWaitingState();
+        fsm_waiting_state();
         break;
     }
 
     case DOOR_OPEN:
-        /* code */
+        fsm_door_open_state();
         break;
 
     default:
@@ -100,14 +105,14 @@ static void fsmRunInner()
  * @brief The underlaying finite state machine within the state of Initialize
  * 
  */
-static void fsmInitState()
+static void fsm_init_state()
 {
     switch (current_under_state)
     {
     case ENTRY:
     {
         floor_init();
-        setFsmState(WAITING);
+        set_fsm_state(WAITING);
 
         break;
     }
@@ -126,7 +131,7 @@ static void fsmInitState()
  * @brief The underlaying finite state machine within the state of Waiting
  * 
  */
-static void fsmWaitingState()
+static void fsm_waiting_state()
 {
     switch (current_under_state)
     {
@@ -139,10 +144,10 @@ static void fsmWaitingState()
         switch (direction)
         {
         case MOVEMENT_UP:
-            setFsmState(DRIVE_UP);
+            set_fsm_state(DRIVE_UP);
             break;
         case MOVEMENT_DOWN:
-            setFsmState(DRIVE_DOWN);
+            set_fsm_state(DRIVE_DOWN);
             break;
 
         default:
@@ -160,7 +165,7 @@ static void fsmWaitingState()
  * @brief The underlaying finite state machine within the state of Door open
  * 
  */
-static void fsmDoorOpenState()
+static void fsm_door_open_state()
 {
     switch (current_under_state)
     {
@@ -181,6 +186,10 @@ static void fsmDoorOpenState()
     }
 }
 
+/**
+ * @brief State for driving up
+ * 
+ */
 static void fsm_drive_up()
 {
     switch (current_under_state)
@@ -201,13 +210,17 @@ static void fsm_drive_up()
     {
         if (set_last_visited_floor() == MOVEMENT_STILL)
         {
-            setFsmState(WAITING);
+            fsm_on_floor_reached();
         }
         break;
     }
     }
 }
 
+/**
+ * @brief State machine for driving down
+ * 
+ */
 static void fsm_drive_down(){
     switch (current_under_state)
     {
@@ -227,9 +240,19 @@ static void fsm_drive_down(){
     {
         if (set_last_visited_floor() == MOVEMENT_STILL)
         {
-            setFsmState(WAITING);
+            fsm_on_floor_reached();
         }
         break;
     }
     }
+}
+
+/**
+ * @brief Event when the elevator changes from driving to stopping
+ * 
+ */
+static void fsm_on_floor_reached(){
+    set_fsm_state(WAITING);
+
+    
 }
