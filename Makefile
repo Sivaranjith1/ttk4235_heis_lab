@@ -1,4 +1,4 @@
-SIM := true
+SIM := false
 SOURCES := main.c fsm.c queue.c floor.c linked_list.c
 
 SOURCE_DIR := source

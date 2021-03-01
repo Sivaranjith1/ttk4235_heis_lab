@@ -38,6 +38,8 @@ void fsm_init()
 
     queue_add_element(FLOOR4, PRIORITY_INSIDE, DIRECTION_INSIDE);
     queue_add_element(FLOOR3, PRIORITY_OUTSIDE, DIRECTION_INSIDE);
+    queue_add_element(FLOOR1, PRIORITY_INSIDE, DIRECTION_INSIDE);
+    queue_add_element(FLOOR2, PRIORITY_OUTSIDE, DIRECTION_INSIDE);
     print_all_floor_orders();
 }
 
