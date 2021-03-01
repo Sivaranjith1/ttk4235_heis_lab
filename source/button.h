@@ -26,14 +26,14 @@
  * @brief Handles the stop button. When called it stops the elevator, clears the queue of all orders.
  * 
  */
-inline void button_on_stop_button_press();
+void button_on_stop_button_press();
 
 
 /**
  * @brief 
  * 
  */
-inline void button_on_obstruction_press();
+void button_on_obstruction_press();
 
 /**
  * @brief 

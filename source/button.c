@@ -45,12 +45,12 @@ OrderDirection button_find_order_direction(HardwareOrder order_type){
     return return_direction;
 }
 
-inline void button_on_stop_button_press(){
+void button_on_stop_button_press(){
     hardware_command_movement(HARDWARE_MOVEMENT_STOP);
     queue_clear();
 }
 
-inline void button_on_obstruction_press(time_t* current_time){
+void button_on_obstruction_press(time_t* current_time){
     *current_time = time(NULL);
 }
 
@@ -82,7 +82,7 @@ void button_on_external_order_button_press(){
     HardwareOrder order_type = button_poll_order();
     OrderDirection direction = button_find_order_direction(order_type);
     queue_add_element(floor, PRIORITY_OUTSIDE, direction);
-    hardware_command_order_light(floor, PRIORITY_OUTSIDE, 1);   
+    hardware_command_order_light(floor, order_type, 1);   
 }
 
 void button_on_internal_order_button_press(){
