@@ -49,7 +49,7 @@ OrderDirection button_find_order_direction(HardwareOrder order_type);
  * @param floor 
  * @param order_type 
  */
-void button_on_external_order_button_press(uint8_t floor, HardwareOrder order_type);
+void button_on_external_order_button_press();
 
 
 /**
@@ -57,14 +57,14 @@ void button_on_external_order_button_press(uint8_t floor, HardwareOrder order_ty
  * 
  * @param floor 
  */
-void button_on_internal_order_button_press(uint8_t floor);
+void button_on_internal_order_button_press();
 
 
 /**
  * @brief 
  * 
  */
-void button_init();
+uint8_t button_poll_floor();
 
 
 /**

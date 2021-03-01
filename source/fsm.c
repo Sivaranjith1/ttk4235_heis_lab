@@ -92,7 +92,10 @@ static void fsmRunInner()
         break;
 
     default:
+    {
+        fsm_button_controls();
         break;
+    }
     }
 }
 
@@ -118,7 +121,10 @@ static void fsmInitState()
     }
 
     default:
+    {
+        fsm_button_controls();
         break;
+    }
     }
 }
 
@@ -156,7 +162,7 @@ static void fsmWaitingState()
     }
     default:
     {
-        
+        fsm_button_controls();
         break;
     }
     }
@@ -183,7 +189,10 @@ static void fsmDoorOpenState()
     }
 
     default:
+    {
+        fsm_button_controls();
         break;
+    }
     }
 }
 
@@ -205,6 +214,7 @@ static void fsm_drive_up()
 
     default:
     {
+        fsm_button_controls();
         if (set_last_visited_floor() == MOVEMENT_STILL)
         {
             setFsmState(WAITING);
@@ -231,6 +241,7 @@ static void fsm_drive_down(){
 
     default:
     {
+        fsm_button_controls();
         if (set_last_visited_floor() == MOVEMENT_STILL)
         {
             setFsmState(WAITING);
