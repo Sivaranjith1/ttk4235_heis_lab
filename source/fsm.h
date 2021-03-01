@@ -6,6 +6,7 @@
 #ifndef FSM_H
 #define FSM_H
 
+#include "button.h"
 /**
  * @brief The different states in the state machine
 */

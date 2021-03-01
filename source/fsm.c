@@ -150,9 +150,15 @@ static void fsmWaitingState()
         }
         break;
     }
-
-    default:
+    case EXIT:
+    {
         break;
+    }
+    default:
+    {
+        
+        break;
+    }
     }
 }
 
@@ -229,6 +235,38 @@ static void fsm_drive_down(){
         {
             setFsmState(WAITING);
         }
+        break;
+    }
+    }
+}
+
+static void fsm_button_controls(){
+    uint8_t buttons_pressed = button_check_buttons_pressed();
+
+    switch (buttons_pressed)
+    {
+    case STOP_BUTTON_PRESSED:
+    {
+        button_on_stop_button_press();
+        break;
+    }
+    case OBSTRUCTION_BUTTON_PRESSED:
+    {
+        button_on_obstruction_press();
+        break;
+    }
+    case EXTERNAL_ORDER_EXISTS:
+    {
+        button_on_external_order_button_press();
+        break;
+    }
+    case INTERNAL_ORDER_EXISTS:
+    {
+        button_on_internal_order_button_press();
+        break;
+    }
+    default:
+    {
         break;
     }
     }

@@ -28,7 +28,7 @@ inline void button_on_obstruction_press(time_t* current_time){
 uint8_t button_check_buttons_pressed(){
    int stop_pressed = hardware_read_stop_signal();
    int obstruction_pressed = hardware_read_obstruction_signal();
-   int floor_order_exists;
+
 
    if(stop_pressed) {
         return STOP_BUTTON_PRESSED;
@@ -40,9 +40,9 @@ uint8_t button_check_buttons_pressed(){
    else
    {
        for(int i = 0; i < HARDWARE_NUMBER_OF_FLOORS; i++){
-               if(floor_order_exists = hardware_read_order(i, HARDWARE_ORDER_DOWN)) return EXTERNAL_ORDER_EXISTS;
-               else if(floor_order_exists = hardware_read_order(i, HARDWARE_ORDER_UP)) return EXTERNAL_ORDER_EXISTS;
-               else if(floor_order_exists = hardware_read_order(i, HARDWARE_ORDER_INSIDE)) return INTERNAL_ORDER_EXISTS;
+               if(hardware_read_order(i, HARDWARE_ORDER_DOWN)) return EXTERNAL_ORDER_EXISTS;
+               else if(hardware_read_order(i, HARDWARE_ORDER_UP)) return EXTERNAL_ORDER_EXISTS;
+               else if(hardware_read_order(i, HARDWARE_ORDER_INSIDE)) return INTERNAL_ORDER_EXISTS;
        }
        return 0;
    }
@@ -54,7 +54,11 @@ void button_on_external_order_button_press(uint8_t floor, HardwareOrder order_ty
     hardware_command_order_light(floor, PRIORITY_OUTSIDE, 1);
 }
 
-void on_internal_order_button_press(uint8_t floor){
+void button_on_internal_order_button_press(uint8_t floor){
     queue_add_element(floor, PRIORITY_INSIDE, DIRECTION_INSIDE);
     hardware_command_order_light(floor, HARDWARE_ORDER_INSIDE, 1);
+}
+
+int button_poll_floor(){
+    
 }
