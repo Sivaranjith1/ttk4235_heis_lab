@@ -31,7 +31,7 @@ int main(){
     
     fsm_init();
 
-    fsmRun(); //this is a blocking function
+    fsm_run(); //this is a blocking function
     
     fprintf(stderr, "Unable to run finite state machine\n");
     

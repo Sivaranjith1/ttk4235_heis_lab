@@ -1,5 +1,5 @@
 SIM := false
-SOURCES := main.c fsm.c floor.c linked_list.c button.c
+SOURCES := main.c fsm.c floor.c linked_list.c button.c queue.c
 
 SOURCE_DIR := source
 BUILD_DIR := build

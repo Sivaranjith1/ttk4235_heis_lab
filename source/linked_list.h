@@ -81,6 +81,13 @@ FloorOrder* get_first_floor_order();
 void delete_floor_order(FloorOrder* order_to_delete);
 
 /**
+ * @brief Deletes all the Floor orders at a floor
+ * 
+ * @param floor the floor to delete all orders from
+ */
+void delete_floor_order_on_floor(uint8_t floor);
+
+/**
  * @brief Delete all floor orders in the linked list
  * 
  */
