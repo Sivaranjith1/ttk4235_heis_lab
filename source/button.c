@@ -1,5 +1,20 @@
 #include "button.h"
 
+OrderDirection find_order_direction(HardwareOrder order_type){
+    OrderDirection return_direction;
+    if(order_type == HARDWARE_ORDER_DOWN){
+        return_direction = DIRECTION_DOWN;
+    }
+    else if (order_type == HARDWARE_ORDER_UP)
+    {
+        return_direction = DIRECTION_UP;
+    }
+    else{
+        return_direction = DIRECTION_INSIDE; // should never happen
+    }
+
+    return return_direction;
+}
 
 inline void on_stop_button_press(){
     hardware_command_movement(HARDWARE_MOVEMENT_STOP);
@@ -34,6 +49,8 @@ uint8_t check_buttons_pressed(){
 }
 
 void on_external_order_button_press(uint8_t floor, HardwareOrder order_type){
+    OrderDirection direction = find_order_direction(order_type);
+    queue_add_element(floor, PRIORITY_OUTSIDE, direction);
 }
 
 void on_internal_order_button_press(uint8_t floor){

@@ -35,6 +35,13 @@ inline void on_stop_button_press();
  */
 inline void on_obstruction_press();
 
+/**
+ * @brief 
+ * 
+ * @param order_type 
+ * @return OrderDirection
+ */
+OrderDirection find_order_direction(HardwareOrder order_type);
 
 /**
  * @brief 
