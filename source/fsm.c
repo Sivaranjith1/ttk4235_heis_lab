@@ -2,6 +2,7 @@
 #include "queue.h"
 #include "floor.h"
 #include "hardware.h"
+#include "light.h"
 
 #include <stdio.h>
 
@@ -41,6 +42,8 @@ void fsm_init()
     queue_add_element(FLOOR1, PRIORITY_INSIDE, DIRECTION_INSIDE);
     queue_add_element(FLOOR2, PRIORITY_OUTSIDE, DIRECTION_INSIDE);
     print_all_floor_orders();
+
+    light_init();
 }
 
 STATE get_fsm_state()
@@ -300,7 +303,9 @@ static void fsm_drive_down(){
  * 
  */
 static void fsm_on_floor_reached(){
-    queue_delete_orders_at_floor((uint8_t) get_last_visited_floor());
+    uint8_t current_floor = (uint8_t) get_last_visited_floor();
+    queue_delete_orders_at_floor(current_floor);
+    light_clear_all_on_floor(current_floor);
     
     set_fsm_state(WAITING);
 }
