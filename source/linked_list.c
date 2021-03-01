@@ -140,6 +140,7 @@ void clear_all_floor_order(){
 }
 
 void print_floor_order(FloorOrder* order_to_print){
+  if(order_to_print == NULL) return;
   printf("Priority %d, direction %d, toFloor %d\n", order_to_print->priority, order_to_print->direction, order_to_print->toFloor);
 }
 
