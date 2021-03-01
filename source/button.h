@@ -26,14 +26,14 @@
  * @brief Handles the stop button. When called it stops the elevator, clears the queue of all orders.
  * 
  */
-inline void on_stop_button_press();
+inline void button_on_stop_button_press();
 
 
 /**
  * @brief 
  * 
  */
-inline void on_obstruction_press();
+inline void button_on_obstruction_press();
 
 /**
  * @brief 
@@ -41,7 +41,7 @@ inline void on_obstruction_press();
  * @param order_type 
  * @return OrderDirection
  */
-OrderDirection find_order_direction(HardwareOrder order_type);
+OrderDirection button_find_order_direction(HardwareOrder order_type);
 
 /**
  * @brief 
@@ -49,7 +49,7 @@ OrderDirection find_order_direction(HardwareOrder order_type);
  * @param floor 
  * @param order_type 
  */
-void on_external_order_button_press(uint8_t floor, HardwareOrder order_type);
+void button_on_external_order_button_press(uint8_t floor, HardwareOrder order_type);
 
 
 /**
@@ -57,7 +57,7 @@ void on_external_order_button_press(uint8_t floor, HardwareOrder order_type);
  * 
  * @param floor 
  */
-void on_internal_order_button_press(uint8_t floor);
+void button_on_internal_order_button_press(uint8_t floor);
 
 
 /**
@@ -72,5 +72,5 @@ void button_init();
  * 
  * @return uint8_t 
  */
-uint8_t check_buttons_pressed();
+uint8_t button_check_buttons_pressed();
 #endif
