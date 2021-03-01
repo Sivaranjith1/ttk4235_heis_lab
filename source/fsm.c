@@ -165,6 +165,10 @@ static void fsm_waiting_state()
             if(next_floor != NULL){
                 printf("Going to floor %d\n", next_floor->toFloor);
                 go_to_floor(next_floor->toFloor);
+
+                if(set_last_visited_floor() == MOVEMENT_STILL){
+                    queue_delete_orders_at_floor(get_last_visited_floor());
+                }
             }
 
             //Check if the elevator is moving 
