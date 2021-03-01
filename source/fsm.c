@@ -1,6 +1,9 @@
 #include "fsm.h"
+#include "queue.h"
 #include "floor.h"
 #include "hardware.h"
+
+#include <stdio.h>
 
 /**
  * @brief Under states such as entry exit for the states under
@@ -31,7 +34,13 @@ static void fsm_run_inner();
 void fsm_init()
 {
     current_state = INITIALIZE;
-    current_under_state = ENTRY;    
+    current_under_state = ENTRY;  
+
+    queue_add_element(FLOOR4, PRIORITY_INSIDE, DIRECTION_INSIDE);
+    queue_add_element(FLOOR3, PRIORITY_OUTSIDE, DIRECTION_INSIDE);
+    queue_add_element(FLOOR1, PRIORITY_INSIDE, DIRECTION_INSIDE);
+    queue_add_element(FLOOR2, PRIORITY_OUTSIDE, DIRECTION_INSIDE);
+    print_all_floor_orders();
 }
 
 STATE get_fsm_state()
@@ -135,29 +144,56 @@ static void fsm_waiting_state()
 {
     switch (current_under_state)
     {
-    case ENTRY:
-    {
-        //hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-
-        MOTOR_MOVEMENT direction = go_to_floor(floor_temp++);
-        if(floor_temp >= 4) floor_temp = 0;
-        switch (direction)
+        case ENTRY:
         {
-        case MOVEMENT_UP:
-            set_fsm_state(DRIVE_UP);
-            break;
-        case MOVEMENT_DOWN:
-            set_fsm_state(DRIVE_DOWN);
-            break;
+            hardware_command_movement(HARDWARE_MOVEMENT_STOP);
 
-        default:
+            // MOTOR_MOVEMENT direction = go_to_floor(floor_temp++);
+            // if(floor_temp >= 4) floor_temp = 0;
+            // switch (direction)
+            // {
+            // case MOVEMENT_UP:
+            //     set_fsm_state(DRIVE_UP);
+            //     break;
+            // case MOVEMENT_DOWN:
+            //     set_fsm_state(DRIVE_DOWN);
+            //     break;
+
+            // default:
+            //     break;
+            // }
             break;
         }
-        break;
-    }
 
-    default:
-        break;
+        case EXIT: {
+            break;
+        }
+
+        default:
+        {   
+            //find the next floor to move to
+            FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_STILL);
+            next_floor = get_first_floor_order();
+            if(next_floor != NULL){
+                printf("Going to floor %d\n", next_floor->toFloor);
+                go_to_floor(next_floor->toFloor);
+            }
+
+            //Check if the elevator is moving 
+            switch (set_last_visited_floor())
+            {
+            case MOVEMENT_UP:
+                set_fsm_state(DRIVE_UP);
+                break;
+            case MOVEMENT_DOWN:
+                set_fsm_state(DRIVE_DOWN);
+                break;
+
+            default:
+                break;
+            }
+            break;
+        }
     }
 }
 
@@ -211,6 +247,12 @@ static void fsm_drive_up()
         if (set_last_visited_floor() == MOVEMENT_STILL)
         {
             fsm_on_floor_reached();
+            break;
+        }
+
+        FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_UP);
+        if(next_floor != NULL){
+            go_to_floor(next_floor->toFloor);
         }
         break;
     }
@@ -241,6 +283,12 @@ static void fsm_drive_down(){
         if (set_last_visited_floor() == MOVEMENT_STILL)
         {
             fsm_on_floor_reached();
+            break;
+        }
+
+        FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_DOWN);
+        if(next_floor != NULL){
+            go_to_floor(next_floor->toFloor);
         }
         break;
     }
@@ -252,7 +300,7 @@ static void fsm_drive_down(){
  * 
  */
 static void fsm_on_floor_reached(){
-    set_fsm_state(WAITING);
-
+    queue_delete_orders_at_floor((uint8_t) get_last_visited_floor());
     
+    set_fsm_state(WAITING);
 }

@@ -1,6 +1,6 @@
 #include "linked_list.h"
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 /**
  * @brief The head of the linked list
@@ -48,7 +48,7 @@ FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor,
     while(next != NULL){
       if(next->priority > newFloor->priority 
         || (next->priority == newFloor->priority && next->direction > newFloor->direction) 
-        || (next->priority == newFloor->priority && next->direction == newFloor->direction && next->toFloor < newFloor->toFloor) 
+        || (next->priority == newFloor->priority && next->direction == newFloor->direction && next->toFloor > newFloor->toFloor) 
         ){
 
         if(next == first_floor_order){
@@ -140,6 +140,7 @@ void clear_all_floor_order(){
 }
 
 void print_floor_order(FloorOrder* order_to_print){
+  if(order_to_print == NULL) return;
   printf("Priority %d, direction %d, toFloor %d\n", order_to_print->priority, order_to_print->direction, order_to_print->toFloor);
 }
 

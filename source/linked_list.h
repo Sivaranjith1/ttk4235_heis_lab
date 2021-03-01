@@ -20,10 +20,11 @@
  */
 typedef enum {
   PRIORITY_INSIDE,
-  PRIORITY_UP,
+  PRIORITY_OUTSIDE
 } OrderPriority;
 
 typedef enum {
+  DIRECTION_INSIDE,
   DIRECTION_UP,
   DIRECTION_DOWN
 } OrderDirection;
