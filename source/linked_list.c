@@ -110,9 +110,9 @@ void delete_floor_order_on_floor(uint8_t floor){
     if(next == NULL) return;
 
     if(next->toFloor == floor){
-      FloorOrder* prev = next->prev;
+      FloorOrder* nexts_next = next->next;
       delete_floor_order(next);
-      next = prev;
+      next = nexts_next;
     } else {
       next = next->next;
     }

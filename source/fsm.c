@@ -150,21 +150,6 @@ static void fsm_waiting_state()
         case ENTRY:
         {
             hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-
-            // MOTOR_MOVEMENT direction = go_to_floor(floor_temp++);
-            // if(floor_temp >= 4) floor_temp = 0;
-            // switch (direction)
-            // {
-            // case MOVEMENT_UP:
-            //     set_fsm_state(DRIVE_UP);
-            //     break;
-            // case MOVEMENT_DOWN:
-            //     set_fsm_state(DRIVE_DOWN);
-            //     break;
-
-            // default:
-            //     break;
-            // }
             break;
         }
 
