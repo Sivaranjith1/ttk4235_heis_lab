@@ -67,7 +67,11 @@ FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor,
         next->prev = newFloor;
 
         break;
-      }
+      } 
+      // else if(next->priority == newFloor->priority && next->direction == newFloor->direction && next->toFloor == newFloor->toFloor){
+      //   // free(newFloor);
+      //   return next;
+      // }
       prev = next;
       next = next->next;
     }
@@ -110,7 +114,7 @@ void delete_floor_order_on_floor(uint8_t floor){
     if(next == NULL) return;
 
     if(next->toFloor == floor){
-      FloorOrder* prev = next->prev;
+      FloorOrder* prev = next->next;
       delete_floor_order(next);
       next = prev;
     } else {

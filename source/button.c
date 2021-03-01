@@ -12,7 +12,7 @@ uint8_t button_poll_floor(){
             return i;
         }
     }
-    return 5; // non-existant floor
+    return HARDWARE_NUMBER_OF_FLOORS; // non-existant floor
 }
 
 HardwareOrder button_poll_order(){
@@ -79,14 +79,17 @@ uint8_t button_check_buttons_pressed(){
 
 void button_on_external_order_button_press(){
     uint8_t floor = button_poll_floor();
+    if(floor >= HARDWARE_NUMBER_OF_FLOORS) return;
     HardwareOrder order_type = button_poll_order();
     OrderDirection direction = button_find_order_direction(order_type);
-    queue_add_element(floor, PRIORITY_OUTSIDE, direction);
+    // queue_add_element(floor, PRIORITY_OUTSIDE, direction);
     hardware_command_order_light(floor, order_type, 1);   
 }
 
 void button_on_internal_order_button_press(){
     uint8_t floor = button_poll_floor();
-    queue_add_element(floor, PRIORITY_INSIDE, DIRECTION_INSIDE);
+    if (floor >= HARDWARE_NUMBER_OF_FLOORS)
+        return;
+    // queue_add_element(floor, PRIORITY_INSIDE, DIRECTION_INSIDE);
     hardware_command_order_light(floor, HARDWARE_ORDER_INSIDE, 1);
 }

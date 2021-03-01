@@ -12,6 +12,7 @@ static void (*p_onFloorCallback)();
 inline static void run_on_floor_callback_function();
 static void move_until_floor_reached();
 static void set_on_floor_callback_function(void (*callback_ptr)());
+static uint8_t temp = 0;
 
 void floor_init(){
     door_open = 0;
@@ -35,6 +36,11 @@ void floor_init(){
 }
 
 MOTOR_MOVEMENT set_last_visited_floor(){
+
+    if(temp ++ == 100){
+        // printf("Runnign set_last_vist\n");
+        temp = 0;
+    }
     
     if(last_visited_floor != 0 && hardware_read_floor_sensor(last_visited_floor - 1)){
         last_visited_floor --;
@@ -73,10 +79,13 @@ static void set_on_floor_callback_function(void (*callback_ptr)()){
  * @brief Runs the callback function when reaching a floor
 */
 inline static void run_on_floor_callback_function(){
+    printf("Sensor %d activated\n", last_visited_floor);
     hardware_command_floor_indicator_on(last_visited_floor);
-    if(p_onFloorCallback == NULL) return;
+    // if(p_onFloorCallback == NULL) return;
 
-    (*p_onFloorCallback)();
+    // (*p_onFloorCallback)();
+
+    move_until_floor_reached();
 }
 
 /**

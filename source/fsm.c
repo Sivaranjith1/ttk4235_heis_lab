@@ -21,6 +21,8 @@ static volatile STATE current_state;
 static volatile UNDER_STATE current_under_state;
 
 static uint8_t floor_temp = 0; //need to remove
+static uint8_t temp = 0;
+static int temp2 = 0;
 
 static void fsm_init_state();
 static void fsm_waiting_state();
@@ -37,6 +39,8 @@ void fsm_init()
     current_state = INITIALIZE;
     current_under_state = ENTRY;
 
+    queue_add_element(2, PRIORITY_INSIDE, DIRECTION_INSIDE);
+
     light_init();
 }
 
@@ -51,10 +55,12 @@ void set_fsm_state(STATE newState)
     fsm_run_inner();
 
     current_state = newState;
+    printf("Entering new state %d", current_state);
     current_under_state = ENTRY;
     fsm_run_inner();
 
     current_under_state = NONE;
+    printf("New state %d", current_state);
 }
 
 void fsm_run()
@@ -150,21 +156,6 @@ static void fsm_waiting_state()
         case ENTRY:
         {
             hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-
-            // MOTOR_MOVEMENT direction = go_to_floor(floor_temp++);
-            // if(floor_temp >= 4) floor_temp = 0;
-            // switch (direction)
-            // {
-            // case MOVEMENT_UP:
-            //     set_fsm_state(DRIVE_UP);
-            //     break;
-            // case MOVEMENT_DOWN:
-            //     set_fsm_state(DRIVE_DOWN);
-            //     break;
-
-            // default:
-            //     break;
-            // }
             break;
         }
 
@@ -172,14 +163,18 @@ static void fsm_waiting_state()
             break;
         }
 
-        default:
+        case NONE:
         {   
             //find the next floor to move to
             fsm_button_controls();
             FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_STILL);
-            next_floor = get_first_floor_order();
+            // next_floor = get_first_floor_order();
             if(next_floor != NULL){
-                printf("Going to floor %d\n", next_floor->toFloor);
+                if(next_floor->toFloor != floor_temp){
+                    floor_temp = next_floor->toFloor;
+                }
+                printf("Going to floor %d %d\n", next_floor->toFloor, temp2++);
+
                 go_to_floor(next_floor->toFloor);
             }
 
@@ -187,10 +182,10 @@ static void fsm_waiting_state()
             switch (set_last_visited_floor())
             {
             case MOVEMENT_UP:
-                set_fsm_state(DRIVE_UP);
+                return set_fsm_state(DRIVE_UP);
                 break;
             case MOVEMENT_DOWN:
-                set_fsm_state(DRIVE_DOWN);
+                return set_fsm_state(DRIVE_DOWN);
                 break;
 
             default:
@@ -198,6 +193,9 @@ static void fsm_waiting_state()
             }
             break;
         }
+
+        default: 
+            break;
     }
 }
 
@@ -249,14 +247,15 @@ static void fsm_drive_up()
         break;
     }
 
-    default:
+    case NONE:
     {
-        fsm_button_controls();
+
         if (set_last_visited_floor() == MOVEMENT_STILL)
         {
             fsm_on_floor_reached();
             break;
         }
+        fsm_button_controls();
 
         FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_UP);
         if(next_floor != NULL){
@@ -264,6 +263,9 @@ static void fsm_drive_up()
         }
         break;
     }
+
+    default:
+        break;
     }
 }
 
@@ -276,31 +278,38 @@ static void fsm_drive_down(){
     {
     case ENTRY:
     {
-
-        /* code */
-        break;
+        printf("Driving down entry\n");
+        return;
     }
 
     case EXIT:
     {
-        break;
+        printf("Driving down exit\n");
+        return;
     }
 
-    default:
+    case NONE:
     {
-        fsm_button_controls();
+        
+            printf("Driving down none %d\n", temp2++);
+        
         if (set_last_visited_floor() == MOVEMENT_STILL)
         {
             fsm_on_floor_reached();
             break;
         }
+        fsm_button_controls();
 
         FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_DOWN);
         if(next_floor != NULL){
+            printf("Driving to floor %d instead\n", next_floor->toFloor);
             go_to_floor(next_floor->toFloor);
         }
         break;
     }
+
+    default:
+        break;
     }
 }
 
@@ -322,11 +331,13 @@ static void fsm_button_controls(){
     case EXTERNAL_ORDER_EXISTS:
     {
         button_on_external_order_button_press();
+        queue_add_element(2, PRIORITY_INSIDE, DIRECTION_INSIDE);
         break;
     }
     case INTERNAL_ORDER_EXISTS:
     {
         button_on_internal_order_button_press();
+        queue_add_element(1, PRIORITY_INSIDE, DIRECTION_INSIDE);
         break;
     }
     default:
