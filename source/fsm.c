@@ -36,8 +36,8 @@ void fsm_init()
     current_state = INITIALIZE;
     current_under_state = ENTRY;  
 
-    queue_add_element(4, PRIORITY_INSIDE, DIRECTION_INSIDE);
-    queue_add_element(3, PRIORITY_OUTSIDE, DIRECTION_INSIDE);
+    queue_add_element(FLOOR4, PRIORITY_INSIDE, DIRECTION_INSIDE);
+    queue_add_element(FLOOR3, PRIORITY_OUTSIDE, DIRECTION_INSIDE);
     print_all_floor_orders();
 }
 
@@ -163,11 +163,17 @@ static void fsm_waiting_state()
             break;
         }
 
+        case EXIT: {
+            break;
+        }
+
         default:
         {   
             //find the next floor to move to
             FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_STILL);
+            next_floor = get_first_floor_order();
             if(next_floor != NULL){
+                printf("Going to floor %d\n", next_floor->toFloor);
                 go_to_floor(next_floor->toFloor);
             }
 
