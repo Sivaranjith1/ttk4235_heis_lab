@@ -38,9 +38,6 @@ void fsm_init()
     current_under_state = ENTRY;  
 
     queue_add_element(FLOOR4, PRIORITY_INSIDE, DIRECTION_INSIDE);
-    queue_add_element(FLOOR3, PRIORITY_OUTSIDE, DIRECTION_INSIDE);
-    queue_add_element(FLOOR1, PRIORITY_INSIDE, DIRECTION_INSIDE);
-    queue_add_element(FLOOR2, PRIORITY_OUTSIDE, DIRECTION_INSIDE);
     print_all_floor_orders();
 
     light_init();
@@ -295,6 +292,13 @@ static void fsm_on_floor_reached(){
     uint8_t current_floor = (uint8_t) get_last_visited_floor();
     queue_delete_orders_at_floor(current_floor);
     light_clear_all_on_floor(current_floor);
-    
+    queue_add_element(floor_temp, PRIORITY_INSIDE, DIRECTION_INSIDE);
+    queue_add_element(floor_temp, PRIORITY_INSIDE, DIRECTION_INSIDE);
+    queue_add_element(floor_temp, PRIORITY_INSIDE, DIRECTION_INSIDE);
+    queue_add_element(floor_temp, PRIORITY_INSIDE, DIRECTION_INSIDE);
+    queue_add_element(floor_temp++, PRIORITY_INSIDE, DIRECTION_INSIDE);
+
+    if(floor_temp == 4) floor_temp = 0;
+
     set_fsm_state(WAITING);
 }
