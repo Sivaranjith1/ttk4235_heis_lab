@@ -25,6 +25,7 @@ static void fsm_drive_up();
 static void fsm_drive_down();
 
 static void fsmRunInner();
+static void fsm_button_controls();
 
 void fsm_init()
 {
