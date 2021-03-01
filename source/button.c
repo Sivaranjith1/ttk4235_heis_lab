@@ -51,6 +51,7 @@ uint8_t check_buttons_pressed(){
 void on_external_order_button_press(uint8_t floor, HardwareOrder order_type){
     OrderDirection direction = find_order_direction(order_type);
     queue_add_element(floor, PRIORITY_OUTSIDE, direction);
+    hardware_command_order_light(floor, PRIORITY_OUTSIDE, 1);
 }
 
 void on_internal_order_button_press(uint8_t floor){
