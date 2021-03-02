@@ -60,6 +60,10 @@ MOTOR_MOVEMENT go_to_floor(ALL_FLOORS floor_num){
     return direction;
 }
 
+uint8_t floor_at_valid_floor(){
+    return hardware_read_floor_sensor(last_visited_floor);
+}
+
 /**
  * @brief Set the On Floor Callback Function that is called each time a floor is passed
  * 
