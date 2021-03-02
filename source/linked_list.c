@@ -46,7 +46,11 @@ FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor,
     FloorOrder* prev = NULL;
 
     while(next != NULL){
-      if(next->priority > newFloor->priority 
+      if(next->priority == newFloor->priority && next->direction == newFloor->direction && next->toFloor == newFloor->toFloor){
+        free(newFloor);
+        return next;
+      }
+      else if(next->priority > newFloor->priority 
         || (next->priority == newFloor->priority && next->direction > newFloor->direction) 
         || (next->priority == newFloor->priority && next->direction == newFloor->direction && next->toFloor > newFloor->toFloor) 
         ){
