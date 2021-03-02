@@ -63,5 +63,11 @@ MOTOR_MOVEMENT go_to_floor(ALL_FLOORS floor_num);
  */
 MOTOR_MOVEMENT set_last_visited_floor();
 
+/**
+ * @brief Checks if the elevator is at a valid floor
+ * 
+ * @return uint8_t 1 if valid floor, 0 otherwise
+ */
+uint8_t floor_at_valid_floor();
 
 #endif

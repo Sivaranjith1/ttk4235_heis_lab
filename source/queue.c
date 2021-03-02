@@ -31,6 +31,10 @@ FloorOrder *queue_get_next_floor_order(uint8_t current_floor, QueueDirection cur
         return NULL;
     }
 
+    if(current_direction == QUEUE_DIRECTION_STILL){
+        return get_first_floor_order();
+    }
+
     OrderPriority priority = current_list_element->priority;
 
     while(1)
@@ -46,7 +50,7 @@ FloorOrder *queue_get_next_floor_order(uint8_t current_floor, QueueDirection cur
             }
         }
 
-        else if(current_direction == QUEUE_DIRECTION_DOWN || current_direction== QUEUE_DIRECTION_STILL){
+        else if(current_direction == QUEUE_DIRECTION_DOWN){
 
             if((priority != current_list_element->priority) || (current_list_element->toFloor >= current_floor)){
                 return current_list_element->prev;

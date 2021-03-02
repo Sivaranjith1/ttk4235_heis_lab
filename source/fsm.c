@@ -180,7 +180,6 @@ static void fsm_waiting_state()
         {   
             //find the next floor to move to
             FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_STILL);
-            next_floor = get_first_floor_order();
             if(next_floor != NULL){
                 printf("Going to floor %d\n", next_floor->toFloor);
                 go_to_floor(next_floor->toFloor);
