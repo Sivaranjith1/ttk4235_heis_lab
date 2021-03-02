@@ -149,6 +149,7 @@ void print_floor_order(FloorOrder* order_to_print){
 }
 
 void print_all_floor_orders(){
+  printf("Printing floor orders: \n");
   FloorOrder* next = first_floor_order;
   while(next != NULL){
     print_floor_order(next);

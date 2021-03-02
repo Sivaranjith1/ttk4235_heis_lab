@@ -89,8 +89,7 @@ void button_on_external_order_button_press(){
 
 void button_on_internal_order_button_press(){
     uint8_t floor = button_poll_floor();
-    if (floor >= HARDWARE_NUMBER_OF_FLOORS)
-        return;
+    if (floor >= HARDWARE_NUMBER_OF_FLOORS) return;
     queue_add_element(floor, PRIORITY_INSIDE, DIRECTION_INSIDE);
     hardware_command_order_light(floor, HARDWARE_ORDER_INSIDE, 1);
 }

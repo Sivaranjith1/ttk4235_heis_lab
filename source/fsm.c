@@ -4,6 +4,7 @@
 #include "hardware.h"
 #include "light.h"
 #include "timer.h"
+#include "button.h"
 
 #include <stdio.h>
 
@@ -33,6 +34,7 @@ static void fsm_run_inner();
 
 static void fsm_on_floor_reached();
 static void fsm_on_door_timer();
+static void fsm_button_control();
 
 void fsm_init()
 {
@@ -205,6 +207,8 @@ static void fsm_waiting_state()
             default:
                 break;
             }
+
+            fsm_button_control();
             break;
         }
     }
@@ -233,6 +237,7 @@ static void fsm_door_open_state()
     }
 
     default:
+        fsm_button_control();
         break;
     }
 }
@@ -269,6 +274,8 @@ static void fsm_drive_up()
         if(next_floor != NULL){
             go_to_floor(next_floor->toFloor);
         }
+
+        fsm_button_control();
         break;
     }
     }
@@ -305,6 +312,8 @@ static void fsm_drive_down(){
         if(next_floor != NULL){
             go_to_floor(next_floor->toFloor);
         }
+
+        fsm_button_control();
         break;
     }
     }
@@ -326,5 +335,27 @@ static void fsm_on_floor_reached(){
 static void fsm_on_door_timer(){
     if(current_state == DOOR_OPEN){
         set_fsm_state(WAITING);
+    }
+}
+
+/**
+ * @brief Function for controling button presses
+ * 
+ */
+static void fsm_button_control(){
+    uint8_t buttons_pressed = button_check_buttons_pressed();
+
+    switch (buttons_pressed)
+    {
+
+    case INTERNAL_ORDER_EXISTS:
+    {
+        button_on_internal_order_button_press();
+        print_all_floor_orders();
+        break;
+    }
+
+    default:
+        break;
     }
 }
