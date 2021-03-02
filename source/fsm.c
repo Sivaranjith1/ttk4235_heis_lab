@@ -41,12 +41,6 @@ void fsm_init()
     current_state = INITIALIZE;
     current_under_state = ENTRY;  
 
-    queue_add_element(FLOOR4, PRIORITY_INSIDE, DIRECTION_INSIDE);
-    queue_add_element(FLOOR3, PRIORITY_INSIDE, DIRECTION_INSIDE);
-    queue_add_element(FLOOR2, PRIORITY_INSIDE, DIRECTION_INSIDE);
-    queue_add_element(FLOOR1, PRIORITY_INSIDE, DIRECTION_INSIDE);
-    print_all_floor_orders();
-
     light_init();
     timer_set_callback_function(&fsm_on_door_timer);
 }
@@ -350,9 +344,18 @@ static void fsm_button_control(){
 
     case INTERNAL_ORDER_EXISTS:
     {
-        button_on_internal_order_button_press();
+        printf("Internal\n");
+        queue_add_element(2, PRIORITY_INSIDE, DIRECTION_INSIDE);
+        // button_on_internal_order_button_press();
         print_all_floor_orders();
         break;
+    }
+
+    case EXTERNAL_ORDER_EXISTS:
+    {
+        queue_add_element(0, PRIORITY_INSIDE, DIRECTION_INSIDE);
+        print_all_floor_orders();
+        break;  
     }
 
     default:
