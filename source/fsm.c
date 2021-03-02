@@ -3,6 +3,7 @@
 #include "floor.h"
 #include "hardware.h"
 #include "light.h"
+#include "timer.h"
 
 #include <stdio.h>
 
@@ -28,9 +29,10 @@ static void fsm_door_open_state();
 static void fsm_drive_up();
 static void fsm_drive_down();
 
+static void fsm_run_inner();
 
 static void fsm_on_floor_reached();
-static void fsm_run_inner();
+static void fsm_on_door_timer();
 
 void fsm_init()
 {
@@ -44,6 +46,7 @@ void fsm_init()
     print_all_floor_orders();
 
     light_init();
+    timer_set_callback_function(&fsm_on_door_timer);
 }
 
 STATE get_fsm_state()
@@ -68,6 +71,8 @@ void fsm_run()
 {
     while (1)
     {
+        timer_check_timer_finished();
+
         fsm_run_inner();
     }
 }
@@ -153,8 +158,17 @@ static void fsm_waiting_state()
             hardware_command_movement(HARDWARE_MOVEMENT_STOP);
 
             uint8_t current_floor = (uint8_t) get_last_visited_floor();
+            FloorOrder* next_floor = get_first_floor_order();
+            uint8_t change_to_door_state = 0;
+
+            if(next_floor != NULL && next_floor->toFloor == current_floor){
+                change_to_door_state = 1;
+            }
+
             queue_delete_orders_at_floor(current_floor);
             light_clear_all_on_floor(current_floor);
+
+            if(change_to_door_state) set_fsm_state(DOOR_OPEN);
             break;
         }
 
@@ -207,12 +221,14 @@ static void fsm_door_open_state()
     case ENTRY:
     {
 
-        /* code */
+        hardware_command_door_open(1);
+        timer_start_timer();
         break;
     }
 
     case EXIT:
     {
+        hardware_command_door_open(0);
         break;
     }
 
@@ -300,4 +316,15 @@ static void fsm_drive_down(){
  */
 static void fsm_on_floor_reached(){
     set_fsm_state(WAITING);
+}
+
+
+/**
+ * @brief Callback function for when the door timer is finished
+ * 
+ */
+static void fsm_on_door_timer(){
+    if(current_state == DOOR_OPEN){
+        set_fsm_state(WAITING);
+    }
 }
