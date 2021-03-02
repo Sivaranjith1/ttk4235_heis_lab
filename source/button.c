@@ -18,9 +18,6 @@ uint8_t check_buttons_pressed(){
         return STOP_BUTTON_PRESSED;
    }
 
-   else if(obstruction_pressed){
-        return OBSTRUCTION_BUTTON_PRESSED;
-   }
    else
    {
        for(int i = 0; i < HARDWARE_NUMBER_OF_FLOORS; i++){
@@ -28,8 +25,12 @@ uint8_t check_buttons_pressed(){
                else if(floor_order_exists = hardware_read_order(i, HARDWARE_ORDER_UP)) return EXTERNAL_ORDER_EXISTS;
                else if(floor_order_exists = hardware_read_order(i, HARDWARE_ORDER_INSIDE)) return INTERNAL_ORDER_EXISTS;
        }
-       return 0;
    }
+   
+   if(obstruction_pressed){
+        return OBSTRUCTION_BUTTON_PRESSED;
+   }
+    return 0;
 }
 
 void on_external_order_button_press(int floor, HardwareOrder order_type){
