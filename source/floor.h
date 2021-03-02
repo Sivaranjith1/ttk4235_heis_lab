@@ -70,5 +70,4 @@ MOTOR_MOVEMENT set_last_visited_floor();
  */
 uint8_t floor_at_valid_floor();
 
-
 #endif
