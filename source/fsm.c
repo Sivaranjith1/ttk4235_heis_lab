@@ -58,6 +58,8 @@ STATE get_fsm_state()
 
 void set_fsm_state(STATE newState)
 {
+    if(current_state == newState) return;
+
     printf("Changing state to %d\n", newState);
     current_under_state = EXIT;
     fsm_run_inner();
@@ -358,6 +360,12 @@ static void fsm_button_control(){
         on_stop_button_press();
         hardware_command_stop_light(1);
         timer_reset_timer();
+
+        if(floor_at_valid_floor()){
+            set_fsm_state(DOOR_OPEN);
+        } else {
+            set_fsm_state(WAITING);
+        }
         break;
     }
     
