@@ -38,14 +38,6 @@ void button_on_obstruction_press();
 /**
  * @brief 
  * 
- * @param order_type 
- * @return OrderDirection
- */
-OrderDirection button_find_order_direction(HardwareOrder order_type);
-
-/**
- * @brief 
- * 
  * @param floor 
  * @param order_type 
  */
@@ -58,13 +50,6 @@ void button_on_external_order_button_press();
  * @param floor 
  */
 void button_on_internal_order_button_press();
-
-
-/**
- * @brief 
- * 
- */
-uint8_t button_poll_floor();
 
 
 /**
