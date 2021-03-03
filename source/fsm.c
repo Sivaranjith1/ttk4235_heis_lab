@@ -345,8 +345,7 @@ static void fsm_button_control(){
     case INTERNAL_ORDER_EXISTS:
     {
         printf("Internal\n");
-        queue_add_element(2, PRIORITY_INSIDE, DIRECTION_INSIDE);
-        // button_on_internal_order_button_press();
+        button_on_internal_order_button_press();
         print_all_floor_orders();
         break;
     }
@@ -354,6 +353,7 @@ static void fsm_button_control(){
     case EXTERNAL_ORDER_EXISTS:
     {
         queue_add_element(0, PRIORITY_INSIDE, DIRECTION_INSIDE);
+        button_on_external_order_button_press();
         print_all_floor_orders();
         break;  
     }
