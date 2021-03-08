@@ -4,6 +4,7 @@
 #include "hardware.h"
 #include "light.h"
 #include "timer.h"
+#include "button.h"
 
 #include <stdio.h>
 
@@ -33,6 +34,7 @@ static void fsm_run_inner();
 
 static void fsm_on_floor_reached();
 static void fsm_on_door_timer();
+static void fsm_button_control();
 
 void fsm_init()
 {
@@ -233,7 +235,10 @@ static void fsm_door_open_state()
     }
 
     default:
+    {
+        fsm_button_control();
         break;
+    }
     }
 }
 
@@ -326,5 +331,25 @@ static void fsm_on_floor_reached(){
 static void fsm_on_door_timer(){
     if(current_state == DOOR_OPEN){
         set_fsm_state(WAITING);
+    }
+}
+
+/**
+ * @brief Function for controling button presses
+ * 
+ */
+static void fsm_button_control(){
+    uint8_t buttons_pressed = check_buttons_pressed();
+
+    switch (buttons_pressed)
+    {
+    case OBSTRUCTION_BUTTON_PRESSED:
+    {
+        timer_reset_timer();
+        break;
+    }
+    
+    default:
+        break;
     }
 }
