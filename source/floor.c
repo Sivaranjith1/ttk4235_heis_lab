@@ -54,6 +54,9 @@ ALL_FLOORS get_last_visited_floor(){
 }
 
 MOTOR_MOVEMENT go_to_floor(ALL_FLOORS floor_num){
+    if(floor_num != requested_floor)
+        printf("Going to floor %d\n", floor_num);
+        
     requested_floor = floor_num;
     set_on_floor_callback_function(&move_until_floor_reached);
     p_onFloorCallback();

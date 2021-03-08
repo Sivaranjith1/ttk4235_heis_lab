@@ -42,8 +42,8 @@ void fsm_init()
     current_under_state = ENTRY;  
 
     queue_add_element(FLOOR4, PRIORITY_INSIDE, DIRECTION_INSIDE);
-    queue_add_element(FLOOR3, PRIORITY_INSIDE, DIRECTION_INSIDE);
-    queue_add_element(FLOOR2, PRIORITY_INSIDE, DIRECTION_INSIDE);
+    queue_add_element(FLOOR3, PRIORITY_OUTSIDE, DIRECTION_UP);
+    queue_add_element(FLOOR2, PRIORITY_OUTSIDE, DIRECTION_DOWN);
     queue_add_element(FLOOR1, PRIORITY_INSIDE, DIRECTION_INSIDE);
     print_all_floor_orders();
 
@@ -159,20 +159,19 @@ static void fsm_waiting_state()
     {
         case ENTRY:
         {
+            printf("\n floor order: \n");
+            print_all_floor_orders();
             hardware_command_movement(HARDWARE_MOVEMENT_STOP);
 
             uint8_t current_floor = (uint8_t) get_last_visited_floor();
-            FloorOrder* next_floor = get_first_floor_order();
-            uint8_t change_to_door_state = 0;
 
-            if(next_floor != NULL && next_floor->toFloor == current_floor){
-                change_to_door_state = 1;
+            if(floor_at_valid_floor() && queue_order_on_floor(current_floor)){
+                queue_delete_orders_at_floor(current_floor);
+                light_clear_all_on_floor(current_floor);
+                set_fsm_state(DOOR_OPEN);
             }
 
-            queue_delete_orders_at_floor(current_floor);
-            light_clear_all_on_floor(current_floor);
 
-            if(change_to_door_state) set_fsm_state(DOOR_OPEN);
             break;
         }
 
@@ -190,7 +189,6 @@ static void fsm_waiting_state()
                 go_to_floor(next_floor->toFloor);
 
                 if(set_last_visited_floor() == MOVEMENT_STILL){
-                    printf("Deleting current floor\n");
                     queue_delete_orders_at_floor(get_last_visited_floor());
                     print_all_floor_orders();
                 }
