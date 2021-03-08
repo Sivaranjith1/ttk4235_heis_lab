@@ -39,7 +39,6 @@ FloorOrder *queue_get_next_floor_order(uint8_t current_floor, QueueDirection cur
     while(1)
     {
       if(current_direction == QUEUE_DIRECTION_DOWN){
-      printf("Floor %d %d %d direction %d \n", current_list_element->toFloor,closet_floor_element->toFloor, current_floor, current_list_element->direction);
         if((current_list_element->toFloor <= current_floor && current_list_element->toFloor >= closet_floor_element->toFloor && current_list_element->direction != DIRECTION_UP) || closet_floor_element->toFloor >= current_floor){
           closet_floor_element = current_list_element;
         }
@@ -60,4 +59,18 @@ FloorOrder *queue_get_next_floor_order(uint8_t current_floor, QueueDirection cur
 
 void queue_delete_orders_at_floor(uint8_t floor){
     delete_floor_order_on_floor(floor);
+}
+
+uint8_t queue_order_on_floor(uint8_t floor){
+  FloorOrder* current_list_element = get_first_floor_order();
+
+  while(1){
+    if(current_list_element == NULL) break;
+
+    if(current_list_element->toFloor == floor) return 1;
+
+    current_list_element = current_list_element->next;
+  }
+
+  return 0;
 }
