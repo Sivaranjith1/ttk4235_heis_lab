@@ -58,6 +58,8 @@ STATE get_fsm_state()
 
 void set_fsm_state(STATE newState)
 {
+    if(current_state == newState) return;
+
     printf("Changing state to %d\n", newState);
     current_under_state = EXIT;
     fsm_run_inner();
@@ -207,6 +209,8 @@ static void fsm_waiting_state()
             default:
                 break;
             }
+
+            fsm_button_control();
             break;
         }
     }
@@ -274,6 +278,7 @@ static void fsm_drive_up()
         if(next_floor != NULL){
             go_to_floor(next_floor->toFloor);
         }
+        fsm_button_control();
         break;
     }
     }
@@ -310,6 +315,7 @@ static void fsm_drive_down(){
         if(next_floor != NULL){
             go_to_floor(next_floor->toFloor);
         }
+        fsm_button_control();
         break;
     }
     }
@@ -348,8 +354,24 @@ static void fsm_button_control(){
         timer_reset_timer();
         break;
     }
+
+    case STOP_BUTTON_PRESSED:
+    {
+        on_stop_button_press();
+        hardware_command_stop_light(1);
+        timer_reset_timer();
+
+        if(floor_at_valid_floor()){
+            set_fsm_state(DOOR_OPEN);
+        } else {
+            set_fsm_state(WAITING);
+        }
+        break;
+    }
     
     default:
         break;
     }
+
+    if(buttons_pressed != STOP_BUTTON_PRESSED) hardware_command_stop_light(0);
 }

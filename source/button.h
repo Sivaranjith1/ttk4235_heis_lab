@@ -17,6 +17,8 @@
 #include <time.h>
 #include <stdint.h>
 
+#define BUTTON_DEBUGGING 0
+
 #define STOP_BUTTON_PRESSED 1
 #define OBSTRUCTION_BUTTON_PRESSED 2
 #define EXTERNAL_ORDER_EXISTS 3
@@ -25,7 +27,7 @@
  * @brief Handles the stop button. When called it stops the elevator, clears the queue of all orders.
  * 
  */
-inline void on_stop_button_press();
+void on_stop_button_press();
 
 
 /**

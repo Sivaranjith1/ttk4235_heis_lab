@@ -1,9 +1,14 @@
 #include "button.h"
+#include "queue.h"
 
 
-inline void on_stop_button_press(){
+void on_stop_button_press(){
+    #if BUTTON_DEBUGGING
+        printf("Stopping\n");
+    #endif
     hardware_command_movement(HARDWARE_MOVEMENT_STOP);
-    queue_delete_all();
+    queue_clear();
+    print_all_floor_orders();
 }
 
 inline void on_obstruction_press(time_t* current_time){
@@ -26,7 +31,7 @@ uint8_t check_buttons_pressed(){
                else if(floor_order_exists = hardware_read_order(i, HARDWARE_ORDER_INSIDE)) return INTERNAL_ORDER_EXISTS;
        }
    }
-   
+
    if(obstruction_pressed){
         return OBSTRUCTION_BUTTON_PRESSED;
    }
