@@ -158,6 +158,11 @@ void print_all_floor_orders(){
   while(++i < MAX_ITERATION){
     if(next == NULL) return;
     print_floor_order(next);
-    next = next->next;
+    if(i + 1 >= MAX_ITERATION){
+      free(next->next);
+      next->next = NULL;
+    } else {
+      next = next->next;
+    }
   }
 }
