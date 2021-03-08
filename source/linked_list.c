@@ -31,6 +31,8 @@ FloorOrder* create_floor_order(OrderDirection direction, uint8_t toFloor, OrderP
 }
 
 FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor, OrderPriority priority){
+  if(priority > PRIORITY_OUTSIDE || direction > DIRECTION_DOWN) return NULL;
+
   FloorOrder* newFloor = malloc(sizeof(FloorOrder));
   newFloor->direction = direction;
   newFloor->priority = priority;
