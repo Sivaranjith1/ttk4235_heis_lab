@@ -45,7 +45,9 @@ FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor,
     FloorOrder* next = first_floor_order;
     FloorOrder* prev = NULL;
 
-    while(next != NULL){
+    uint8_t i = 0;
+    while(++i < MAX_ITERATION){
+      if(next != NULL) break;
       if(next->priority == newFloor->priority && next->direction == newFloor->direction && next->toFloor == newFloor->toFloor){
         free(newFloor);
         return next;
@@ -153,7 +155,10 @@ void print_floor_order(FloorOrder* order_to_print){
 void print_all_floor_orders(){
   printf("Printing floor orders: \n");
   FloorOrder* next = first_floor_order;
-  while(next != NULL){
+
+  uint8_t i = 0;
+  while(++i < MAX_ITERATION){
+    if(next == NULL) return;
     print_floor_order(next);
     next = next->next;
   }

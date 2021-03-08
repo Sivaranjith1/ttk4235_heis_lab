@@ -182,6 +182,7 @@ static void fsm_waiting_state()
 
                 if(set_last_visited_floor() == MOVEMENT_STILL){
                     queue_delete_orders_at_floor(get_last_visited_floor());
+                    light_clear_all_on_floor(get_last_visited_floor());
                     print_all_floor_orders();
                 }
             }
