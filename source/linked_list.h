@@ -14,6 +14,8 @@
 #include <stdint.h>
 #include "hardware.h"
 
+#define MAX_ITERATION 100
+
 /**
  * @brief Priority for the Floor order
  * 
