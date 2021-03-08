@@ -16,6 +16,7 @@ HardwareOrder button_poll_order(){
             return HARDWARE_ORDER_INSIDE;
         }
     }
+    printf("No hardware order exists\n");
     return 3; // non-existant order
 }
 
@@ -29,8 +30,6 @@ void button_on_stop_button_press(){
     print_all_floor_orders();
 }
 
-void button_on_obstruction_press(time_t* current_time){
-}
 
 uint8_t button_check_buttons_pressed(){
    int stop_pressed = hardware_read_stop_signal();
