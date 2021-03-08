@@ -50,6 +50,7 @@ FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor,
     while(next != NULL){
       if(next->priority == newFloor->priority && next->direction == newFloor->direction && next->toFloor == newFloor->toFloor){
         free(newFloor);
+        newFloor = NULL;
         return next;
       }
       else if(next->priority > newFloor->priority 
@@ -159,6 +160,4 @@ void print_all_floor_orders(){
     print_floor_order(next);
     next = next->next;
   }
-
-  free(next);
 }
