@@ -140,10 +140,7 @@ void clear_all_floor_order(){
     }
     next = currentElem->next;
   }
-
-  free(currentElem);
-  free(next);
-
+  
   first_floor_order = NULL;
 }
 
