@@ -12,7 +12,7 @@ FloorOrder* create_floor_order(OrderDirection direction, uint8_t toFloor, OrderP
   newFloor->direction = direction;
   newFloor->priority = priority;
   newFloor->toFloor = toFloor;
-  if(prev == NULL){
+  if(!prev){
     
     newFloor->prev = NULL;
     newFloor->next = NULL;
@@ -24,7 +24,6 @@ FloorOrder* create_floor_order(OrderDirection direction, uint8_t toFloor, OrderP
     newFloor->prev = prev;
     newFloor->next = prevsNext;
     prev->next = newFloor;
-    // free(prevsNext);
   }
 
   return newFloor;
@@ -38,7 +37,7 @@ FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor,
   newFloor->priority = priority;
   newFloor->toFloor = toFloor;
 
-  if(first_floor_order == NULL){
+  if(!first_floor_order){
     newFloor->prev = NULL;
     newFloor->next = NULL;
 
@@ -47,7 +46,7 @@ FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor,
     FloorOrder* next = first_floor_order;
     FloorOrder* prev = NULL;
 
-    while(next != NULL){
+    while(next){
       if(next->priority == newFloor->priority && next->direction == newFloor->direction && next->toFloor == newFloor->toFloor){
         free(newFloor);
         newFloor = NULL;
@@ -66,7 +65,7 @@ FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor,
           break;
         }
 
-        if(next->prev != NULL){
+        if(next->prev){
           next->prev->next = newFloor;
         }
         newFloor->prev = next->prev;
@@ -79,7 +78,7 @@ FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor,
       next = next->next;
     }
 
-    if(next == NULL){
+    if(!next){
       prev->next = newFloor;
       newFloor->prev = prev;
     }
@@ -98,15 +97,15 @@ void delete_floor_order(FloorOrder* order_to_delete){
     first_floor_order = order_to_delete->next;
   }
 
-  if(order_to_delete->prev != NULL){
+  if(order_to_delete->prev){
     order_to_delete->prev->next = order_to_delete->next;
   }
 
-  if(order_to_delete->next != NULL){
+  if(order_to_delete->next){
     order_to_delete->next->prev = order_to_delete->prev;
   }
 
-  free(order_to_delete);
+  // free(order_to_delete);
   order_to_delete = NULL;
 }
 
@@ -115,7 +114,7 @@ void delete_floor_order_on_floor(uint8_t floor){
 
   uint8_t i = 0;
   while(++i < MAX_ITERATION){
-    if(next == NULL) return;
+    if(!next) return;
 
     if(next->toFloor == floor){
       FloorOrder* nexts_next = next->next;
@@ -128,7 +127,7 @@ void delete_floor_order_on_floor(uint8_t floor){
 }
 
 void clear_all_floor_order(){
-  if(first_floor_order == NULL) return;
+  if(!first_floor_order) return;
   FloorOrder* currentElem = first_floor_order;
   FloorOrder* next = first_floor_order->next;
 
@@ -136,7 +135,7 @@ void clear_all_floor_order(){
   while(++i < MAX_ITERATION){
     delete_floor_order(currentElem);
     currentElem = next;
-    if(currentElem == NULL){
+    if(!currentElem){
       break;
     }
     next = currentElem->next;
@@ -146,7 +145,7 @@ void clear_all_floor_order(){
 }
 
 void print_floor_order(FloorOrder* order_to_print){
-  if(order_to_print == NULL) return;
+  if(!order_to_print) return;
   printf("Priority %d, direction %d, toFloor %d\n", order_to_print->priority, order_to_print->direction, order_to_print->toFloor);
 }
 
@@ -156,7 +155,7 @@ void print_all_floor_orders(){
 
   uint8_t i = 0;
   while(++i < MAX_ITERATION){
-    if(next == NULL) return;
+    if(!next) return;
     print_floor_order(next);
     if(i + 1 >= MAX_ITERATION){
       free(next->next);

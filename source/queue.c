@@ -28,7 +28,7 @@ FloorOrder *queue_get_next_floor_order(uint8_t current_floor, QueueDirection cur
     FloorOrder* current_list_element = get_first_floor_order();
     FloorOrder* closet_floor_element = get_first_floor_order();
 
-    if(current_list_element == NULL){
+    if(!current_list_element){
         return NULL;
     }
 
@@ -52,7 +52,7 @@ FloorOrder *queue_get_next_floor_order(uint8_t current_floor, QueueDirection cur
 
 
       current_list_element = current_list_element->next;
-      if(current_list_element == NULL){
+      if(!current_list_element){
         return closet_floor_element;
       }
     }
@@ -69,7 +69,7 @@ uint8_t queue_order_on_floor(uint8_t floor){
 
   uint8_t i = 0;
   while(++i < MAX_ITERATION){
-    if(current_list_element == NULL) break;
+    if(!current_list_element) break;
 
     if(current_list_element->toFloor == floor) return 1;
 
