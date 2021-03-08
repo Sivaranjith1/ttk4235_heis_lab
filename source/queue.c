@@ -56,6 +56,8 @@ FloorOrder *queue_get_next_floor_order(uint8_t current_floor, QueueDirection cur
         return closet_floor_element;
       }
     }
+
+    return NULL;
 }
 
 void queue_delete_orders_at_floor(uint8_t floor){
