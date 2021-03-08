@@ -1,4 +1,5 @@
 #include "button.h"
+#include "queue.h"
 
 static OrderDirection button_find_order_direction(HardwareOrder order_type);
 static uint8_t button_poll_floor();
@@ -20,8 +21,12 @@ HardwareOrder button_poll_order(){
 
 
 void button_on_stop_button_press(){
+    #if BUTTON_DEBUGGING
+        printf("Stopping\n");
+    #endif
     hardware_command_movement(HARDWARE_MOVEMENT_STOP);
     queue_clear();
+    print_all_floor_orders();
 }
 
 void button_on_obstruction_press(time_t* current_time){

@@ -59,6 +59,14 @@ void queue_delete_orders_at_floor(uint8_t floor);
  */
 void queue_delete_element(FloorOrder* floor_order);
 
+/**
+ * @brief Check if the floor is in the queue
+ * 
+ * @param floor The floor to check in the queue
+ * @return uint8_t 0 if floor does not exist in the queue, 1 if it does
+ */
+uint8_t queue_order_on_floor(uint8_t floor);
+
 
 
 #endif

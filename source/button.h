@@ -14,9 +14,10 @@
 #define BUTTON_H
 
 #include "hardware.h"
-#include "queue.h"
 #include <time.h>
 #include <stdint.h>
+
+#define BUTTON_DEBUGGING 0
 
 #define STOP_BUTTON_PRESSED 1
 #define OBSTRUCTION_BUTTON_PRESSED 2

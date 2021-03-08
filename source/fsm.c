@@ -52,6 +52,8 @@ STATE get_fsm_state()
 
 void set_fsm_state(STATE newState)
 {
+    if(current_state == newState) return;
+
     printf("Changing state to %d\n", newState);
     current_under_state = EXIT;
     fsm_run_inner();
@@ -151,20 +153,19 @@ static void fsm_waiting_state()
     {
         case ENTRY:
         {
+            printf("\n floor order: \n");
+            print_all_floor_orders();
             hardware_command_movement(HARDWARE_MOVEMENT_STOP);
 
             uint8_t current_floor = (uint8_t) get_last_visited_floor();
-            FloorOrder* next_floor = get_first_floor_order();
-            uint8_t change_to_door_state = 0;
 
-            if(next_floor != NULL && next_floor->toFloor == current_floor){
-                change_to_door_state = 1;
+            if(floor_at_valid_floor() && queue_order_on_floor(current_floor)){
+                queue_delete_orders_at_floor(current_floor);
+                light_clear_all_on_floor(current_floor);
+                set_fsm_state(DOOR_OPEN);
             }
 
-            queue_delete_orders_at_floor(current_floor);
-            light_clear_all_on_floor(current_floor);
 
-            if(change_to_door_state) set_fsm_state(DOOR_OPEN);
             break;
         }
 
@@ -176,13 +177,10 @@ static void fsm_waiting_state()
         {   
             //find the next floor to move to
             FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_STILL);
-            next_floor = get_first_floor_order();
             if(next_floor != NULL){
-                printf("Going to floor %d\n", next_floor->toFloor);
                 go_to_floor(next_floor->toFloor);
 
                 if(set_last_visited_floor() == MOVEMENT_STILL){
-                    printf("Deleting current floor\n");
                     queue_delete_orders_at_floor(get_last_visited_floor());
                     print_all_floor_orders();
                 }
@@ -231,8 +229,10 @@ static void fsm_door_open_state()
     }
 
     default:
+    {
         fsm_button_control();
         break;
+    }
     }
 }
 
@@ -268,7 +268,6 @@ static void fsm_drive_up()
         if(next_floor != NULL){
             go_to_floor(next_floor->toFloor);
         }
-
         fsm_button_control();
         break;
     }
@@ -306,7 +305,6 @@ static void fsm_drive_down(){
         if(next_floor != NULL){
             go_to_floor(next_floor->toFloor);
         }
-
         fsm_button_control();
         break;
     }
@@ -341,24 +339,41 @@ static void fsm_button_control(){
 
     switch (buttons_pressed)
     {
+        case OBSTRUCTION_BUTTON_PRESSED:
+        {
+            timer_reset_timer();
+            break;
+        }
+        case STOP_BUTTON_PRESSED:
+        {
+            button_on_stop_button_press();
+            hardware_command_stop_light(1);
+            timer_reset_timer();
 
-    case INTERNAL_ORDER_EXISTS:
-    {
-        printf("Internal\n");
-        button_on_internal_order_button_press();
-        print_all_floor_orders();
-        break;
+            if(floor_at_valid_floor()){
+                set_fsm_state(DOOR_OPEN);
+            } else {
+                set_fsm_state(WAITING);
+            }
+            break;
+        }
+        case INTERNAL_ORDER_EXISTS:
+        {
+            printf("Internal\n");
+            button_on_internal_order_button_press();
+            print_all_floor_orders();
+            break;
+        }
+
+        case EXTERNAL_ORDER_EXISTS:
+        {
+            button_on_external_order_button_press();
+            print_all_floor_orders();
+            break;
+        }
+        default:
+            break;
     }
 
-    case EXTERNAL_ORDER_EXISTS:
-    {
-        queue_add_element(0, PRIORITY_INSIDE, DIRECTION_INSIDE);
-        button_on_external_order_button_press();
-        print_all_floor_orders();
-        break;  
-    }
-
-    default:
-        break;
-    }
+    if(buttons_pressed != STOP_BUTTON_PRESSED) hardware_command_stop_light(0);
 }
