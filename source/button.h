@@ -23,6 +23,8 @@
 #define OBSTRUCTION_BUTTON_PRESSED 2
 #define EXTERNAL_ORDER_EXISTS 3
 #define INTERNAL_ORDER_EXISTS 4
+
+#define INVALID_HARDWARE_ORDER 3
 /**
  * @brief Handles the stop button. When called it stops the elevator, clears the queue of all orders.
  * 
