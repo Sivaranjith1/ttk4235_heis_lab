@@ -23,19 +23,20 @@
 #define OBSTRUCTION_BUTTON_PRESSED 2
 #define EXTERNAL_ORDER_EXISTS 3
 #define INTERNAL_ORDER_EXISTS 4
+
+#define INVALID_HARDWARE_ORDER 3
 /**
  * @brief Handles the stop button. When called it stops the elevator, clears the queue of all orders.
  * 
  */
-void on_stop_button_press();
+void button_on_stop_button_press();
 
 
 /**
  * @brief 
  * 
  */
-inline void on_obstruction_press();
-
+void button_on_obstruction_press();
 
 /**
  * @brief 
@@ -43,7 +44,7 @@ inline void on_obstruction_press();
  * @param floor 
  * @param order_type 
  */
-void on_external_order_button_press(int floor, HardwareOrder order_type);
+void button_on_external_order_button_press();
 
 
 /**
@@ -51,14 +52,7 @@ void on_external_order_button_press(int floor, HardwareOrder order_type);
  * 
  * @param floor 
  */
-void on_internal_order_button_press(int floor);
-
-
-/**
- * @brief 
- * 
- */
-void button_init();
+void button_on_internal_order_button_press();
 
 
 /**
@@ -66,5 +60,5 @@ void button_init();
  * 
  * @return uint8_t 
  */
-uint8_t check_buttons_pressed();
+uint8_t button_check_buttons_pressed();
 #endif

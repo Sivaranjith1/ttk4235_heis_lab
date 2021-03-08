@@ -94,7 +94,7 @@ inline static void run_on_floor_callback_function(){
 static void move_until_floor_reached(){
     if(requested_floor >= NUM_FLOOR) return;
 
-    if(last_visited_floor == requested_floor) {
+    if(last_visited_floor == requested_floor && floor_at_valid_floor()) {
         hardware_command_movement(HARDWARE_MOVEMENT_STOP);    
         direction = MOVEMENT_STILL;
         set_on_floor_callback_function(NULL);

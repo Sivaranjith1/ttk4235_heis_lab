@@ -31,6 +31,8 @@ FloorOrder* create_floor_order(OrderDirection direction, uint8_t toFloor, OrderP
 }
 
 FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor, OrderPriority priority){
+  if(priority > PRIORITY_OUTSIDE || direction > DIRECTION_DOWN) return NULL;
+
   FloorOrder* newFloor = malloc(sizeof(FloorOrder));
   newFloor->direction = direction;
   newFloor->priority = priority;
@@ -48,6 +50,7 @@ FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t toFloor,
     while(next != NULL){
       if(next->priority == newFloor->priority && next->direction == newFloor->direction && next->toFloor == newFloor->toFloor){
         free(newFloor);
+        newFloor = NULL;
         return next;
       }
       else if(next->priority > newFloor->priority 
@@ -110,7 +113,8 @@ void delete_floor_order(FloorOrder* order_to_delete){
 void delete_floor_order_on_floor(uint8_t floor){
   FloorOrder* next = first_floor_order;
 
-  while(1){
+  uint8_t i = 0;
+  while(++i < MAX_ITERATION){
     if(next == NULL) return;
 
     if(next->toFloor == floor){
@@ -128,7 +132,8 @@ void clear_all_floor_order(){
   FloorOrder* currentElem = first_floor_order;
   FloorOrder* next = first_floor_order->next;
 
-  while(1){
+  uint8_t i = 0;
+  while(++i < MAX_ITERATION){
     delete_floor_order(currentElem);
     currentElem = next;
     if(currentElem == NULL){
@@ -136,10 +141,7 @@ void clear_all_floor_order(){
     }
     next = currentElem->next;
   }
-
-  free(currentElem);
-  free(next);
-
+  
   first_floor_order = NULL;
 }
 
@@ -149,11 +151,18 @@ void print_floor_order(FloorOrder* order_to_print){
 }
 
 void print_all_floor_orders(){
+  printf("Printing floor orders: \n");
   FloorOrder* next = first_floor_order;
-  while(next != NULL){
-    print_floor_order(next);
-    next = next->next;
-  }
 
-  free(next);
+  uint8_t i = 0;
+  while(++i < MAX_ITERATION){
+    if(next == NULL) return;
+    print_floor_order(next);
+    if(i + 1 >= MAX_ITERATION){
+      free(next->next);
+      next->next = NULL;
+    } else {
+      next = next->next;
+    }
+  }
 }

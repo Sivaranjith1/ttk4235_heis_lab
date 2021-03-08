@@ -41,12 +41,6 @@ void fsm_init()
     current_state = INITIALIZE;
     current_under_state = ENTRY;  
 
-    queue_add_element(FLOOR4, PRIORITY_INSIDE, DIRECTION_INSIDE);
-    queue_add_element(FLOOR3, PRIORITY_OUTSIDE, DIRECTION_UP);
-    queue_add_element(FLOOR2, PRIORITY_OUTSIDE, DIRECTION_DOWN);
-    queue_add_element(FLOOR1, PRIORITY_INSIDE, DIRECTION_INSIDE);
-    print_all_floor_orders();
-
     light_init();
     timer_set_callback_function(&fsm_on_door_timer);
 }
@@ -183,13 +177,12 @@ static void fsm_waiting_state()
         {   
             //find the next floor to move to
             FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_STILL);
-            next_floor = get_first_floor_order();
             if(next_floor != NULL){
-                printf("Going to floor %d\n", next_floor->toFloor);
                 go_to_floor(next_floor->toFloor);
 
                 if(set_last_visited_floor() == MOVEMENT_STILL){
                     queue_delete_orders_at_floor(get_last_visited_floor());
+                    light_clear_all_on_floor(get_last_visited_floor());
                     print_all_floor_orders();
                 }
             }
@@ -343,32 +336,44 @@ static void fsm_on_door_timer(){
  * 
  */
 static void fsm_button_control(){
-    uint8_t buttons_pressed = check_buttons_pressed();
+    uint8_t buttons_pressed = button_check_buttons_pressed();
 
     switch (buttons_pressed)
     {
-    case OBSTRUCTION_BUTTON_PRESSED:
-    {
-        timer_reset_timer();
-        break;
-    }
-
-    case STOP_BUTTON_PRESSED:
-    {
-        on_stop_button_press();
-        hardware_command_stop_light(1);
-        timer_reset_timer();
-
-        if(floor_at_valid_floor()){
-            set_fsm_state(DOOR_OPEN);
-        } else {
-            set_fsm_state(WAITING);
+        case OBSTRUCTION_BUTTON_PRESSED:
+        {
+            timer_reset_timer();
+            break;
         }
-        break;
-    }
-    
-    default:
-        break;
+        case STOP_BUTTON_PRESSED:
+        {
+            button_on_stop_button_press();
+            hardware_command_stop_light(1);
+            timer_reset_timer();
+
+            if(floor_at_valid_floor()){
+                set_fsm_state(DOOR_OPEN);
+            } else {
+                set_fsm_state(WAITING);
+            }
+            break;
+        }
+        case INTERNAL_ORDER_EXISTS:
+        {
+            printf("Internal\n");
+            button_on_internal_order_button_press();
+            print_all_floor_orders();
+            break;
+        }
+
+        case EXTERNAL_ORDER_EXISTS:
+        {
+            button_on_external_order_button_press();
+            print_all_floor_orders();
+            break;
+        }
+        default:
+            break;
     }
 
     if(buttons_pressed != STOP_BUTTON_PRESSED) hardware_command_stop_light(0);
