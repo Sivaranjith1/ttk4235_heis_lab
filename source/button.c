@@ -1,5 +1,6 @@
 #include "button.h"
 #include "queue.h"
+#include <stdio.h>
 
 static OrderDirection button_find_order_direction(HardwareOrder order_type);
 static uint8_t button_poll_floor();
@@ -17,7 +18,7 @@ HardwareOrder button_poll_order(){
         }
     }
     printf("No hardware order exists\n");
-    return 3; // non-existant order
+    return INVALID_HARDWARE_ORDER;
 }
 
 
@@ -58,9 +59,11 @@ uint8_t button_check_buttons_pressed(){
 
 void button_on_external_order_button_press(){
     uint8_t floor = button_poll_floor();
-    if(floor >= HARDWARE_NUMBER_OF_FLOORS) return;
     HardwareOrder order_type = button_poll_order();
     OrderDirection direction = button_find_order_direction(order_type);
+
+    if(floor >= HARDWARE_NUMBER_OF_FLOORS || order_type >= INVALID_HARDWARE_ORDER || direction == DIRECTION_INSIDE) return;
+
     queue_add_element(floor, PRIORITY_OUTSIDE, direction);
     hardware_command_order_light(floor, order_type, 1);   
 }
@@ -88,6 +91,7 @@ static OrderDirection button_find_order_direction(HardwareOrder order_type){
         return_direction = DIRECTION_UP;
     }
     else{
+        printf("Encountered direction inside\n");
         return_direction = DIRECTION_INSIDE; // should never happen
     }
 
@@ -111,5 +115,6 @@ static uint8_t button_poll_floor(){
             return i;
         }
     }
+    printf("No floor order exists\n");
     return HARDWARE_NUMBER_OF_FLOORS; // non-existant floor
 }
