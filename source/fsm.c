@@ -348,6 +348,7 @@ static void fsm_button_control(){
         case STOP_BUTTON_PRESSED:
         {
             button_on_stop_button_press();
+            light_init();
             hardware_command_stop_light(1);
             timer_reset_timer();
 
