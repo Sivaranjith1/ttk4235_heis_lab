@@ -101,6 +101,19 @@ static void move_until_floor_reached(){
         return;
     }
 
+    if(last_visited_floor == requested_floor && direction == MOVEMENT_UP){
+        last_visited_floor ++;
+        hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+        direction = MOVEMENT_DOWN;
+        return;
+    } else if (last_visited_floor == requested_floor && direction == MOVEMENT_DOWN){
+        last_visited_floor --;
+        hardware_command_movement(HARDWARE_MOVEMENT_UP);
+        direction = MOVEMENT_UP;
+        return;
+
+    }
+
     //if the floor is above
     if(last_visited_floor < requested_floor){
         hardware_command_movement(HARDWARE_MOVEMENT_UP);
