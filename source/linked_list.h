@@ -25,6 +25,10 @@ typedef enum {
   PRIORITY_OUTSIDE
 } OrderPriority;
 
+/**
+ * @brief The direction for the Floor order, is is corrulated with the button press
+ * 
+ */
 typedef enum {
   DIRECTION_INSIDE,
   DIRECTION_UP,

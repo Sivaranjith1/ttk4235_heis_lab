@@ -27,6 +27,10 @@ typedef enum {
     FLOOR4
 } ALL_FLOORS;
 
+/**
+ * @brief Possible travel direction for the elevator
+ * 
+ */
 typedef enum {
     MOVEMENT_STILL,
     MOVEMENT_UP,
