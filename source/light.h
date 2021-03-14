@@ -1,7 +1,7 @@
 /**
  * @file lights.h
  * @author Ask and Sivaranjith
- * @brief 
+ * @brief Clear all lights and clear all lights at floor
  * @version 0.1
  * @date 2021-03-01
  * 

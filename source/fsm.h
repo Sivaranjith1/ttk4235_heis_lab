@@ -1,7 +1,13 @@
 /**
- * @file 
+ * @file fsm.h
+ * @author Ask and Sivaranjith
  * @brief File for the finite state machine
-*/
+ * @version 0.1
+ * @date 2021-03-14
+ * 
+ * @copyright Copyright (c) 2021
+ * 
+ */
 
 #ifndef FSM_H
 #define FSM_H
