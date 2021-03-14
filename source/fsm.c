@@ -45,12 +45,12 @@ void fsm_init()
     timer_set_callback_function(&fsm_on_door_timer);
 }
 
-STATE get_fsm_state()
+STATE fsm_get_state()
 {
     return current_state;
 }
 
-void set_fsm_state(STATE new_state)
+void fsm_set_state(STATE new_state)
 {
     if(current_state == new_state) return;
 
@@ -128,7 +128,7 @@ static void fsm_init_state()
     case ENTRY:
     {
         floor_init();
-        set_fsm_state(WAITING);
+        fsm_set_state(WAITING);
 
         break;
     }
@@ -154,15 +154,15 @@ static void fsm_waiting_state()
         case ENTRY:
         {
             printf("\n floor order: \n");
-            print_all_floor_orders();
+            linked_list_print_all_floor_orders();
             hardware_command_movement(HARDWARE_MOVEMENT_STOP);
 
-            uint8_t current_floor = (uint8_t) get_last_visited_floor();
+            uint8_t current_floor = (uint8_t) floor_get_last_visited_floor();
 
             if(floor_at_valid_floor() && queue_order_on_floor(current_floor)){
                 queue_delete_orders_at_floor(current_floor);
                 light_clear_all_on_floor(current_floor);
-                set_fsm_state(DOOR_OPEN);
+                fsm_set_state(DOOR_OPEN);
             }
 
 
@@ -176,25 +176,25 @@ static void fsm_waiting_state()
         default:
         {   
             //find the next floor to move to
-            FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_STILL);
+            FloorOrder* next_floor = queue_get_next_floor_order(floor_get_last_visited_floor(), QUEUE_DIRECTION_STILL);
             if(next_floor != NULL){
-                go_to_floor(next_floor->to_floor);
+                floor_go_to_floor(next_floor->to_floor);
 
-                if(set_last_visited_floor() == MOVEMENT_STILL){
-                    queue_delete_orders_at_floor(get_last_visited_floor());
-                    light_clear_all_on_floor(get_last_visited_floor());
-                    print_all_floor_orders();
+                if(floor_set_last_visited_floor() == MOVEMENT_STILL){
+                    queue_delete_orders_at_floor(floor_get_last_visited_floor());
+                    light_clear_all_on_floor(floor_get_last_visited_floor());
+                    linked_list_print_all_floor_orders();
                 }
             }
 
             //Check if the elevator is moving 
-            switch (set_last_visited_floor())
+            switch (floor_set_last_visited_floor())
             {
             case MOVEMENT_UP:
-                set_fsm_state(DRIVE_UP);
+                fsm_set_state(DRIVE_UP);
                 break;
             case MOVEMENT_DOWN:
-                set_fsm_state(DRIVE_DOWN);
+                fsm_set_state(DRIVE_DOWN);
                 break;
 
             default:
@@ -259,15 +259,15 @@ static void fsm_drive_up()
 
     default:
     {
-        if (set_last_visited_floor() == MOVEMENT_STILL)
+        if (floor_set_last_visited_floor() == MOVEMENT_STILL)
         {
             fsm_on_floor_reached();
             break;
         }
 
-        FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_UP);
+        FloorOrder* next_floor = queue_get_next_floor_order(floor_get_last_visited_floor(), QUEUE_DIRECTION_UP);
         if(next_floor != NULL){
-            go_to_floor(next_floor->to_floor);
+            floor_go_to_floor(next_floor->to_floor);
         }
         fsm_button_control();
         break;
@@ -296,15 +296,15 @@ static void fsm_drive_down(){
 
     default:
     {
-        if (set_last_visited_floor() == MOVEMENT_STILL)
+        if (floor_set_last_visited_floor() == MOVEMENT_STILL)
         {
             fsm_on_floor_reached();
             break;
         }
 
-        FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_DOWN);
+        FloorOrder* next_floor = queue_get_next_floor_order(floor_get_last_visited_floor(), QUEUE_DIRECTION_DOWN);
         if(next_floor != NULL){
-            go_to_floor(next_floor->to_floor);
+            floor_go_to_floor(next_floor->to_floor);
         }
         fsm_button_control();
         break;
@@ -317,7 +317,7 @@ static void fsm_drive_down(){
  * 
  */
 static void fsm_on_floor_reached(){
-    set_fsm_state(WAITING);
+    fsm_set_state(WAITING);
 }
 
 
@@ -327,7 +327,7 @@ static void fsm_on_floor_reached(){
  */
 static void fsm_on_door_timer(){
     if(current_state == DOOR_OPEN){
-        set_fsm_state(WAITING);
+        fsm_set_state(WAITING);
     }
 }
 
@@ -353,9 +353,9 @@ static void fsm_button_control(){
             timer_reset_timer();
 
             if(floor_at_valid_floor()){
-                set_fsm_state(DOOR_OPEN);
+                fsm_set_state(DOOR_OPEN);
             } else {
-                set_fsm_state(WAITING);
+                fsm_set_state(WAITING);
             }
             break;
         }
@@ -363,14 +363,14 @@ static void fsm_button_control(){
         {
             printf("Internal\n");
             button_on_internal_order_button_press();
-            print_all_floor_orders();
+            linked_list_print_all_floor_orders();
             break;
         }
 
         case EXTERNAL_ORDER_EXISTS:
         {
             button_on_external_order_button_press();
-            print_all_floor_orders();
+            linked_list_print_all_floor_orders();
             break;
         }
         default:

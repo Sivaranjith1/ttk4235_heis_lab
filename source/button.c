@@ -28,7 +28,7 @@ void button_on_stop_button_press(){
     #endif
     hardware_command_movement(HARDWARE_MOVEMENT_STOP);
     queue_clear();
-    print_all_floor_orders();
+    linked_list_print_all_floor_orders();
 }
 
 

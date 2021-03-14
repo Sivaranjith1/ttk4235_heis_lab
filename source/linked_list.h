@@ -59,7 +59,7 @@ struct FloorOrder {
  * @param prev FloorOrder* Previous object in the linked list
  * @return FloorOrder* a new floor order in the linked list
  */
-FloorOrder* create_floor_order(OrderDirection direction, uint8_t to_floor, OrderPriority priority, FloorOrder* prev);
+FloorOrder* linked_list_create_floor_order(OrderDirection direction, uint8_t to_floor, OrderPriority priority, FloorOrder* prev);
 
 /**
  * @brief Create a Floor object and adds it in a sorted linked list, it assume the linked list is sorted before calling this function. The linked list will be sorted by priority, than direction, than floor
@@ -70,46 +70,46 @@ FloorOrder* create_floor_order(OrderDirection direction, uint8_t to_floor, Order
  * @param prev FloorOrder* Previous object in the linked list
  * @return FloorOrder* a new floor order in the linked list
  */
-FloorOrder* create_sorted_floor_order(OrderDirection direction, uint8_t to_floor, OrderPriority priority);
+FloorOrder* linked_list_create_sorted_floor_order(OrderDirection direction, uint8_t to_floor, OrderPriority priority);
 
 /**
  * @brief Get the first floor order object in the linked list
  * 
  * @return FloorOrder* the first element in the linked list
  */
-FloorOrder* get_first_floor_order();
+FloorOrder* linked_list_get_first_floor_order();
 
 /**
  * @brief Delete the given floor order, and make the next previous' next, and prev next's prev
  * 
  * @param order_to_delete The Floor Order to delete
  */
-void delete_floor_order(FloorOrder* order_to_delete);
+void linked_list_delete_floor_order(FloorOrder* order_to_delete);
 
 /**
  * @brief Deletes all the Floor orders at a floor
  * 
  * @param floor the floor to delete all orders from
  */
-void delete_floor_order_on_floor(uint8_t floor);
+void linked_list_delete_floor_order_on_floor(uint8_t floor);
 
 /**
  * @brief Delete all floor orders in the linked list
  * 
  */
-void clear_all_floor_order();
+void linked_list_clear_all_floor_order();
 
 /**
  * @brief Print for a floor order
  * 
  * @param order_to_print The floor order to print
  */
-void print_floor_order(FloorOrder* order_to_print);
+void linked_list_print_floor_order(FloorOrder* order_to_print);
 
 /**
  * @brief Print every Floor Object in the linked list
  * 
  */
-void print_all_floor_orders();
+void linked_list_print_all_floor_orders();
 
 #endif
