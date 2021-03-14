@@ -34,6 +34,15 @@ typedef enum {
 } MOTOR_MOVEMENT;
 
 /**
+ * @brief Specify where the elevator is related to the last visited
+ * 
+ */
+typedef enum {
+    FLOOR_POSITION_ABOVE,
+    FLOOR_POSITION_BELOW
+} FLOOR_POSITION_BETWEEN_FLOOR;
+
+/**
  * @brief Initialize the state of floor. Will drive up until it reaches a valid floor
  */
 void floor_init();

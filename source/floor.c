@@ -6,6 +6,7 @@ static uint8_t last_visited_floor;
 static uint8_t door_open;
 static uint8_t requested_floor = NUM_FLOOR;
 static MOTOR_MOVEMENT direction = MOVEMENT_STILL;
+static FLOOR_POSITION_BETWEEN_FLOOR floor_position_to_last_visited_floor = FLOOR_POSITION_ABOVE;
 
 static void (*p_on_floor_callback)();
 
@@ -41,9 +42,20 @@ MOTOR_MOVEMENT set_last_visited_floor(){
         run_on_floor_callback_function();
     }
 
-    if(last_visited_floor != NUM_FLOOR - 1 && hardware_read_floor_sensor(last_visited_floor + 1)){
+    else if(last_visited_floor != NUM_FLOOR - 1 && hardware_read_floor_sensor(last_visited_floor + 1)){
         last_visited_floor ++;
         run_on_floor_callback_function();
+    }
+    //sanity check
+    else {
+        for (uint8_t i = 0; i < NUM_FLOOR; i++)
+        {
+            if (hardware_read_floor_sensor(i))
+            {
+                last_visited_floor = i;
+                break;
+            }
+        }
     }
 
     return direction;
@@ -54,8 +66,9 @@ ALL_FLOORS get_last_visited_floor(){
 }
 
 MOTOR_MOVEMENT go_to_floor(ALL_FLOORS floor_num){
-    if(floor_num != requested_floor)
+    if(floor_num != requested_floor){
         printf("Going to floor %d\n", floor_num);
+    }
         
     requested_floor = floor_num;
     set_on_floor_callback_function(&move_until_floor_reached);
@@ -101,25 +114,24 @@ static void move_until_floor_reached(){
         return;
     }
 
-    if(last_visited_floor == requested_floor && direction == MOVEMENT_UP){
-        last_visited_floor ++;
-        hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-        direction = MOVEMENT_DOWN;
-        return;
-    } else if (last_visited_floor == requested_floor && direction == MOVEMENT_DOWN){
-        last_visited_floor --;
+    //if the floor is above
+    if (last_visited_floor < requested_floor || (last_visited_floor == requested_floor && floor_position_to_last_visited_floor == FLOOR_POSITION_BELOW))
+    {
         hardware_command_movement(HARDWARE_MOVEMENT_UP);
         direction = MOVEMENT_UP;
-        return;
-
+    }
+    else if (last_visited_floor > requested_floor || (last_visited_floor == requested_floor && floor_position_to_last_visited_floor == FLOOR_POSITION_ABOVE))
+    {
+        hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+        direction = MOVEMENT_DOWN;
     }
 
-    //if the floor is above
-    if(last_visited_floor < requested_floor){
-        hardware_command_movement(HARDWARE_MOVEMENT_UP);
-        direction = MOVEMENT_UP;
-    } else if(last_visited_floor > requested_floor){
-        hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
-        direction = MOVEMENT_DOWN;
+    if(floor_at_valid_floor() && direction == MOVEMENT_UP){
+        floor_position_to_last_visited_floor = FLOOR_POSITION_ABOVE;
+    }
+
+    else if (floor_at_valid_floor() && direction == MOVEMENT_DOWN)
+    {
+        floor_position_to_last_visited_floor = FLOOR_POSITION_BELOW;
     }
 }
