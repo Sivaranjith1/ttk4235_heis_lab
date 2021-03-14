@@ -7,7 +7,7 @@ static uint8_t door_open;
 static uint8_t requested_floor = NUM_FLOOR;
 static MOTOR_MOVEMENT direction = MOVEMENT_STILL;
 
-static void (*p_onFloorCallback)();
+static void (*p_on_floor_callback)();
 
 inline static void run_on_floor_callback_function();
 static void move_until_floor_reached();
@@ -15,7 +15,7 @@ static void set_on_floor_callback_function(void (*callback_ptr)());
 
 void floor_init(){
     door_open = 0;
-    p_onFloorCallback = NULL;
+    p_on_floor_callback = NULL;
 
     hardware_command_movement(HARDWARE_MOVEMENT_UP);
 
@@ -59,7 +59,7 @@ MOTOR_MOVEMENT go_to_floor(ALL_FLOORS floor_num){
         
     requested_floor = floor_num;
     set_on_floor_callback_function(&move_until_floor_reached);
-    p_onFloorCallback();
+    p_on_floor_callback();
     return direction;
 }
 
@@ -73,7 +73,7 @@ uint8_t floor_at_valid_floor(){
  * @param callback_ptr The function pointer to call
  */
 static void set_on_floor_callback_function(void (*callback_ptr)()){
-    p_onFloorCallback = callback_ptr;
+    p_on_floor_callback = callback_ptr;
 }
 
 /**
@@ -81,9 +81,9 @@ static void set_on_floor_callback_function(void (*callback_ptr)()){
 */
 inline static void run_on_floor_callback_function(){
     hardware_command_floor_indicator_on(last_visited_floor);
-    if(p_onFloorCallback == NULL) return;
+    if(p_on_floor_callback == NULL) return;
 
-    (*p_onFloorCallback)();
+    (*p_on_floor_callback)();
 }
 
 /**
@@ -99,6 +99,19 @@ static void move_until_floor_reached(){
         direction = MOVEMENT_STILL;
         set_on_floor_callback_function(NULL);
         return;
+    }
+
+    if(last_visited_floor == requested_floor && direction == MOVEMENT_UP){
+        last_visited_floor ++;
+        hardware_command_movement(HARDWARE_MOVEMENT_DOWN);
+        direction = MOVEMENT_DOWN;
+        return;
+    } else if (last_visited_floor == requested_floor && direction == MOVEMENT_DOWN){
+        last_visited_floor --;
+        hardware_command_movement(HARDWARE_MOVEMENT_UP);
+        direction = MOVEMENT_UP;
+        return;
+
     }
 
     //if the floor is above
