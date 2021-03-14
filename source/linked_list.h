@@ -1,7 +1,7 @@
 /**
- * @file queue.h
+ * @file linked_list.h
  * @author Ask & Sivaranjith
- * @brief 
+ * @brief Create. sort and delete from and the whole linked list
  * @version 0.1
  * @date 2021-02-15
  * 

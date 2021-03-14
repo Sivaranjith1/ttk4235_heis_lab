@@ -1,7 +1,7 @@
 /**
  * @file timer.h
  * @author Ask & Sivaranjith
- * @brief 
+ * @brief A timer with a pointer callback function
  * @version 0.1
  * @date 2021-03-02
  * 
@@ -12,7 +12,7 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-#define TIMER_WAIT_TIME 1
+#define TIMER_WAIT_TIME 3
 #define DEBUGGER 0
 #include <time.h>
 

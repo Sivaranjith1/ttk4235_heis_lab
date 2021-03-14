@@ -1,7 +1,7 @@
 /**
  * @file queue.h
- * @author your name (you@domain.com)
- * @brief 
+ * @author Ask and Sivaranjith
+ * @brief Get the next floor and interact with the linked list, an queue wrapper for linked list
  * @version 0.1
  * @date 2021-02-22
  * 

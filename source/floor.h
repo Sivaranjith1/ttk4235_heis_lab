@@ -1,7 +1,7 @@
 /**
  * @file floor.h
- * @author Ask & Sivaranjith
- * @brief 
+ * @author Ask and Sivaranjith
+ * @brief Control the floor position and direction control for request of specific floor
  * @version 0.1
  * @date 2021-02-15
  * 
