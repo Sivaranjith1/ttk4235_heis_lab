@@ -2,10 +2,10 @@
 #include <stdint.h>
 #include <stdio.h>
 
-static time_t timer_start;
-static uint8_t timer_enabled = 0;
+static time_t timer_start; //time when the timer started
+static uint8_t timer_enabled = 0; //1 if timer is enabled
 
-static void (*p_callback_function)(void) = NULL;
+static void (*p_callback_function)(void) = NULL; //callback function when the timer is finished
 
 static inline void timer_run_callback_function();
 

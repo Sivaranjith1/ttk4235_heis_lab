@@ -19,8 +19,8 @@ typedef enum
     NONE
 } UNDER_STATE;
 
-static volatile STATE current_state;
-static volatile UNDER_STATE current_under_state;
+static volatile STATE current_state; //the current state 
+static volatile UNDER_STATE current_under_state; //the under state such as entry, exit and none
 
 static void fsm_init_state();
 static void fsm_waiting_state();

@@ -1,6 +1,10 @@
 #include "light.h"
 #include "hardware.h"
 
+/**
+ * @brief All types of order_types
+ * 
+ */
 static HardwareOrder order_types[3] = {
         HARDWARE_ORDER_UP,
         HARDWARE_ORDER_INSIDE,
