@@ -5,13 +5,13 @@
 #include "fsm.h"
 
 int main(){
-    int error = hardware_init();
+    int error = hardware_init(); //initalize the hardware
     if(error != 0){
         fprintf(stderr, "Unable to initialize hardware\n");
         exit(1);
     }
     
-    fsm_init();
+    fsm_init(); //initalize the finite state machine
 
     fsm_run(); //this is a blocking function
     
