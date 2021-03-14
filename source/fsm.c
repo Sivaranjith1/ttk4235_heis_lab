@@ -22,8 +22,6 @@ typedef enum
 static volatile STATE current_state;
 static volatile UNDER_STATE current_under_state;
 
-static uint8_t floor_temp = 0; //need to remove
-
 static void fsm_init_state();
 static void fsm_waiting_state();
 static void fsm_door_open_state();
