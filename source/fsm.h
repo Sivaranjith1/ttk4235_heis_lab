@@ -25,7 +25,7 @@ typedef enum {
 
 /**
  * @brief initialize the finite state machine
-*/
+*/ 
 void fsm_init();
 
 /**

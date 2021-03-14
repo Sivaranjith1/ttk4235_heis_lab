@@ -34,7 +34,7 @@ void floor_init(){
     }
 }
 
-MOTOR_MOVEMENT floor_set_last_visited_floor(){
+MotorMovement floor_set_last_visited_floor(){
     
     //check if the sensor below the current floor triggers, decrement by 1 if that happens
     if(last_visited_floor != 0 && hardware_read_floor_sensor(last_visited_floor - 1)){
@@ -62,11 +62,11 @@ MOTOR_MOVEMENT floor_set_last_visited_floor(){
     return direction;
 }
 
-ALL_FLOORS floor_get_last_visited_floor(){
+AllFloors floor_get_last_visited_floor(){
     return last_visited_floor;
 }
 
-MOTOR_MOVEMENT floor_go_to_floor(ALL_FLOORS floor_num){
+MotorMovement floor_go_to_floor(AllFloors floor_num){
     if(floor_num != requested_floor){
         printf("Going to floor %d\n", floor_num);
     }
