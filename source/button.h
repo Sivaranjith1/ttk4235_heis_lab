@@ -33,32 +33,25 @@ void button_on_stop_button_press();
 
 
 /**
- * @brief 
+ * @brief When called will at the currently external pressed button to queue
+ * @note Should be called when an external order button press is detected
  * 
- */
-void button_on_obstruction_press();
-
-/**
- * @brief 
- * 
- * @param floor 
- * @param order_type 
  */
 void button_on_external_order_button_press();
 
 
 /**
- * @brief 
+ * @brief When called will at the currently internal pressed button to queue
+ * @note Should be called when an internal order button press is detected
  * 
- * @param floor 
  */
 void button_on_internal_order_button_press();
 
 
 /**
- * @brief 
+ * @brief Poll all the buttons and return if a button type is pressed
  * 
- * @return uint8_t 
+ * @return uint8_t return the button type that is pressed. Can be 0 if notting is pressed or @c STOP_BUTTON_PRESSED, @c OBSTRUCTION_BUTTON_PRESSED, @c EXTERNAL_ORDER_EXISTS or @c INTERNAL_ORDER_EXISTS
  */
 uint8_t button_check_buttons_pressed();
 #endif
