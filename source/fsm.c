@@ -36,10 +36,14 @@ static void fsm_button_control();
 
 void fsm_init()
 {
+    //initialize the state and the under state
     current_state = INITIALIZE;
     current_under_state = ENTRY;  
 
+    //initialize lights
     light_init();
+
+    //set the callback function for the timer
     timer_set_callback_function(&fsm_on_door_timer);
 }
 
@@ -53,13 +57,17 @@ void fsm_set_state(STATE new_state)
     if(current_state == new_state) return;
 
     printf("Changing state to %d\n", new_state);
+
+    //will first run exit on the old state
     current_under_state = EXIT;
     fsm_run_inner();
 
+    //then run entry on the new state
     current_state = new_state;
     current_under_state = ENTRY;
     fsm_run_inner();
 
+    //then set under state to NONE
     current_under_state = NONE;
 }
 
@@ -67,8 +75,10 @@ void fsm_run()
 {
     while (1)
     {
+        //poll the timer
         timer_check_timer_finished();
 
+        //run the state machine
         fsm_run_inner();
     }
 }
@@ -151,10 +161,12 @@ static void fsm_waiting_state()
     {
         case ENTRY:
         {
+            //stop the elevator when entering waiting state
             printf("\n floor order: \n");
             linked_list_print_all_floor_orders();
             hardware_command_movement(HARDWARE_MOVEMENT_STOP);
 
+            //if a valid floor is reaches, clear the lights and remove from the queue
             uint8_t current_floor = (uint8_t) floor_get_last_visited_floor();
 
             if(floor_at_valid_floor() && queue_order_on_floor(current_floor)){
@@ -178,6 +190,7 @@ static void fsm_waiting_state()
             if(next_floor != NULL){
                 floor_go_to_floor(next_floor->to_floor);
 
+                //if the requested floor is the current floor, remove it and clear the lights
                 if(floor_set_last_visited_floor() == MOVEMENT_STILL){
                     queue_delete_orders_at_floor(floor_get_last_visited_floor());
                     light_clear_all_on_floor(floor_get_last_visited_floor());
@@ -185,7 +198,7 @@ static void fsm_waiting_state()
                 }
             }
 
-            //Check if the elevator is moving 
+            //Check if the elevator is moving and set the right state
             switch (floor_set_last_visited_floor())
             {
             case MOVEMENT_UP:
@@ -199,6 +212,7 @@ static void fsm_waiting_state()
                 break;
             }
 
+            //check for button presses
             fsm_button_control();
             break;
         }
@@ -215,7 +229,7 @@ static void fsm_door_open_state()
     {
     case ENTRY:
     {
-
+        //open the door and start the timer when entering door open state
         hardware_command_door_open(1);
         timer_start_timer();
         break;
@@ -223,13 +237,14 @@ static void fsm_door_open_state()
 
     case EXIT:
     {
+        //close the door when exiting the door open state
         hardware_command_door_open(0);
         break;
     }
 
     default:
     {
-        fsm_button_control();
+        fsm_button_control(); //check for button presses
         break;
     }
     }
@@ -257,17 +272,20 @@ static void fsm_drive_up()
 
     default:
     {
+        //requested floor was reached if the elevator stops moving
         if (floor_set_last_visited_floor() == MOVEMENT_STILL)
         {
             fsm_on_floor_reached();
             break;
         }
 
+        //check if there is a new floor to move to in the path of the traveling direction
         FloorOrder* next_floor = queue_get_next_floor_order(floor_get_last_visited_floor(), QUEUE_DIRECTION_UP);
         if(next_floor != NULL){
             floor_go_to_floor(next_floor->to_floor);
         }
-        fsm_button_control();
+
+        fsm_button_control(); //check for button press
         break;
     }
     }
@@ -294,17 +312,19 @@ static void fsm_drive_down(){
 
     default:
     {
+        //requested floor was reached if the elevator stops moving
         if (floor_set_last_visited_floor() == MOVEMENT_STILL)
         {
             fsm_on_floor_reached();
             break;
         }
 
+        //check if there is a new floor to move to in the path of the traveling direction
         FloorOrder* next_floor = queue_get_next_floor_order(floor_get_last_visited_floor(), QUEUE_DIRECTION_DOWN);
         if(next_floor != NULL){
             floor_go_to_floor(next_floor->to_floor);
         }
-        fsm_button_control();
+        fsm_button_control(); //check for button press
         break;
     }
     }
@@ -324,6 +344,8 @@ static void fsm_on_floor_reached(){
  * 
  */
 static void fsm_on_door_timer(){
+
+    //when the timer is reached and the current state is door_open, change to waiting
     if(current_state == DOOR_OPEN){
         fsm_set_state(WAITING);
     }
@@ -340,16 +362,19 @@ static void fsm_button_control(){
     {
         case OBSTRUCTION_BUTTON_PRESSED:
         {
+            //reset timer if obstruction
             timer_reset_timer();
             break;
         }
         case STOP_BUTTON_PRESSED:
         {
+            //when stop button is pressed clear all lights and reset the timer
             button_on_stop_button_press();
             light_init();
             hardware_command_stop_light(1);
             timer_reset_timer();
 
+            //open the door if at a valid floor
             if(floor_at_valid_floor()){
                 fsm_set_state(DOOR_OPEN);
             } else {
@@ -359,7 +384,6 @@ static void fsm_button_control(){
         }
         case INTERNAL_ORDER_EXISTS:
         {
-            printf("Internal\n");
             button_on_internal_order_button_press();
             linked_list_print_all_floor_orders();
             break;
@@ -375,5 +399,6 @@ static void fsm_button_control(){
             break;
     }
 
+    //clear the stop button light if stop button is not pressed anymore
     if(buttons_pressed != STOP_BUTTON_PRESSED) hardware_command_stop_light(0);
 }
