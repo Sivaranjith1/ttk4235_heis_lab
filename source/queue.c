@@ -40,7 +40,9 @@ FloorOrder *queue_get_next_floor_order(uint8_t current_floor, QueueDirection cur
     while(++i < MAX_ITERATION)
     {
       if(current_direction == QUEUE_DIRECTION_DOWN){
-        if((current_list_element->to_floor < current_floor && current_list_element->to_floor >= closet_floor_element->to_floor && current_list_element->direction != DIRECTION_UP) || closet_floor_element->to_floor >= current_floor || (closet_floor_element->direction == DIRECTION_UP && current_list_element->direction != DIRECTION_UP)){
+        if((current_list_element->to_floor < current_floor && current_list_element->to_floor >= closet_floor_element->to_floor && current_list_element->direction != DIRECTION_UP)
+         || closet_floor_element->to_floor >= current_floor 
+         || (closet_floor_element->direction == DIRECTION_UP && current_list_element->direction != DIRECTION_UP && current_list_element->to_floor < current_floor)){
           closet_floor_element = current_list_element;
         }
       }
