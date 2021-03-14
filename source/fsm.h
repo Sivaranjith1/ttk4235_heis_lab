@@ -26,13 +26,13 @@ void fsm_init();
  * @brief gets the current state of the finite state machine
  * @returns STATE the state of the current state
 */
-STATE get_fsm_state();
+STATE fsm_get_state();
 
 /**
  * @brief sets the current state to the new_state
  * @param new_state the new_state to set current state equal to
 */
-void set_fsm_state(STATE new_state);
+void fsm_set_state(STATE new_state);
 
 /**
  * @brief A blocking function running the finite state machine

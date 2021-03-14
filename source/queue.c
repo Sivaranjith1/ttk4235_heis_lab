@@ -2,16 +2,16 @@
 #include <stdio.h>
 
 void queue_delete_element(FloorOrder *floor_order){
-    delete_floor_order(floor_order);
+    linked_list_delete_floor_order(floor_order);
 }
 
 void queue_clear(){
-    clear_all_floor_order();
+    linked_list_clear_all_floor_order();
 }
 
 FloorOrder *queue_add_element(uint8_t to_floor, OrderPriority priority, OrderDirection direction)
 {
-    return create_sorted_floor_order(direction, to_floor, priority);
+    return linked_list_create_sorted_floor_order(direction, to_floor, priority);
 }
 
 
@@ -25,8 +25,8 @@ FloorOrder *queue_add_element(uint8_t to_floor, OrderPriority priority, OrderDir
  * @return FloorOrder* 
  */
 FloorOrder *queue_get_next_floor_order(uint8_t current_floor, QueueDirection current_direction){
-    FloorOrder* current_list_element = get_first_floor_order();
-    FloorOrder* closet_floor_element = get_first_floor_order();
+    FloorOrder* current_list_element = linked_list_get_first_floor_order();
+    FloorOrder* closet_floor_element = linked_list_get_first_floor_order();
 
     if(!current_list_element){
         return NULL;
@@ -67,11 +67,11 @@ FloorOrder *queue_get_next_floor_order(uint8_t current_floor, QueueDirection cur
 }
 
 void queue_delete_orders_at_floor(uint8_t floor){
-    delete_floor_order_on_floor(floor);
+    linked_list_delete_floor_order_on_floor(floor);
 }
 
 uint8_t queue_order_on_floor(uint8_t floor){
-  FloorOrder* current_list_element = get_first_floor_order();
+  FloorOrder* current_list_element = linked_list_get_first_floor_order();
 
   uint8_t i = 0;
   while(++i < MAX_ITERATION){

@@ -58,7 +58,7 @@ void floor_init();
  * 
  * @return uint8_t the last visited floor
  */
-ALL_FLOORS get_last_visited_floor();
+ALL_FLOORS floor_get_last_visited_floor();
 
 /**
  * @brief Drive up to the desired floor
@@ -67,14 +67,14 @@ ALL_FLOORS get_last_visited_floor();
  * 
  * @return MOTOR_MOVEMENT The direction it is currently traveling
  */
-MOTOR_MOVEMENT go_to_floor(ALL_FLOORS floor_num);
+MOTOR_MOVEMENT floor_go_to_floor(ALL_FLOORS floor_num);
 
 /**
  * @brief Set the Last Visited Floor object when detecting a sensor update
  * 
  * @return MOTOR_MOVEMENT The direction it is currently traveling
  */
-MOTOR_MOVEMENT set_last_visited_floor();
+MOTOR_MOVEMENT floor_set_last_visited_floor();
 
 /**
  * @brief Checks if the elevator is at a valid floor
