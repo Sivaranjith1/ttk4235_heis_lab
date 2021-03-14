@@ -50,15 +50,15 @@ STATE get_fsm_state()
     return current_state;
 }
 
-void set_fsm_state(STATE newState)
+void set_fsm_state(STATE new_state)
 {
-    if(current_state == newState) return;
+    if(current_state == new_state) return;
 
-    printf("Changing state to %d\n", newState);
+    printf("Changing state to %d\n", new_state);
     current_under_state = EXIT;
     fsm_run_inner();
 
-    current_state = newState;
+    current_state = new_state;
     current_under_state = ENTRY;
     fsm_run_inner();
 
@@ -178,7 +178,7 @@ static void fsm_waiting_state()
             //find the next floor to move to
             FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_STILL);
             if(next_floor != NULL){
-                go_to_floor(next_floor->toFloor);
+                go_to_floor(next_floor->to_floor);
 
                 if(set_last_visited_floor() == MOVEMENT_STILL){
                     queue_delete_orders_at_floor(get_last_visited_floor());
@@ -267,7 +267,7 @@ static void fsm_drive_up()
 
         FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_UP);
         if(next_floor != NULL){
-            go_to_floor(next_floor->toFloor);
+            go_to_floor(next_floor->to_floor);
         }
         fsm_button_control();
         break;
@@ -304,7 +304,7 @@ static void fsm_drive_down(){
 
         FloorOrder* next_floor = queue_get_next_floor_order(get_last_visited_floor(), QUEUE_DIRECTION_DOWN);
         if(next_floor != NULL){
-            go_to_floor(next_floor->toFloor);
+            go_to_floor(next_floor->to_floor);
         }
         fsm_button_control();
         break;

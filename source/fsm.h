@@ -29,10 +29,10 @@ void fsm_init();
 STATE get_fsm_state();
 
 /**
- * @brief sets the current state to the newState
- * @param newState the newState to set current state equal to
+ * @brief sets the current state to the new_state
+ * @param new_state the new_state to set current state equal to
 */
-void set_fsm_state(STATE newState);
+void set_fsm_state(STATE new_state);
 
 /**
  * @brief A blocking function running the finite state machine
