@@ -18,14 +18,14 @@
 
 /**
  * @brief Enum with all the valid floors
- * 
+ *  Solely used for testing purposes, otherwise uint8_t is used.
  */
 typedef enum {
     FLOOR1,
     FLOOR2,
     FLOOR3,
     FLOOR4
-} ALL_FLOORS;
+} AllFloors;
 
 /**
  * @brief Possible travel direction for the elevator
@@ -35,7 +35,7 @@ typedef enum {
     MOVEMENT_STILL,
     MOVEMENT_UP,
     MOVEMENT_DOWN
-} MOTOR_MOVEMENT;
+} MotorMovement;
 
 /**
  * @brief Specify where the elevator is related to the last visited
@@ -44,7 +44,7 @@ typedef enum {
 typedef enum {
     FLOOR_POSITION_ABOVE,
     FLOOR_POSITION_BELOW
-} FLOOR_POSITION_BETWEEN_FLOOR;
+} FloorPositionBetweenFloor;
 
 /**
  * @brief Initialize the state of floor. Will drive up until it reaches a valid floor
@@ -58,23 +58,23 @@ void floor_init();
  * 
  * @return uint8_t the last visited floor
  */
-ALL_FLOORS floor_get_last_visited_floor();
+AllFloors floor_get_last_visited_floor();
 
 /**
  * @brief Drive up to the desired floor
  * 
  * @param floor_num the floor that is desired
  * 
- * @return MOTOR_MOVEMENT The direction it is currently traveling
+ * @return MotorMovement The direction it is currently traveling
  */
-MOTOR_MOVEMENT floor_go_to_floor(ALL_FLOORS floor_num);
+MotorMovement floor_go_to_floor(AllFloors floor_num);
 
 /**
  * @brief Set the Last Visited Floor object when detecting a sensor update
  * 
- * @return MOTOR_MOVEMENT The direction it is currently traveling
+ * @return MotorMovement The direction it is currently traveling
  */
-MOTOR_MOVEMENT floor_set_last_visited_floor();
+MotorMovement floor_set_last_visited_floor();
 
 /**
  * @brief Checks if the elevator is at a valid floor

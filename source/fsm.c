@@ -74,7 +74,7 @@ void fsm_run()
 }
 
 /**
- * @brief The main state machine that runs in a while loop in $c{fsm_run}
+ * @brief The main state machine that runs in a while loop in @c{fsm_run}
  * 
  */
 static void fsm_run_inner()
