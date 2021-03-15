@@ -12,7 +12,6 @@
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 #include <stdint.h>
-#include "hardware.h"
 
 #define MAX_ITERATION 100
 
