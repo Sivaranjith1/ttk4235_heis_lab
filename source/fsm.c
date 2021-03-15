@@ -1,7 +1,6 @@
 #include "fsm.h"
 #include "queue.h"
 #include "floor.h"
-#include "hardware.h"
 #include "light.h"
 #include "timer.h"
 #include "button.h"

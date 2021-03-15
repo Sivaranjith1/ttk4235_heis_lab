@@ -4,8 +4,8 @@
 
 static uint8_t last_visited_floor; //the last sensor activated
 static uint8_t requested_floor = NUM_FLOOR; //the desired floor
-static MOTOR_MOVEMENT direction = MOVEMENT_STILL; //direction the elevator is moving
-static FLOOR_POSITION_BETWEEN_FLOOR floor_position_to_last_visited_floor = FLOOR_POSITION_ABOVE; //if the elevator is above or below last visited floor
+static MotorMovement direction = MOVEMENT_STILL; //direction the elevator is moving
+static FloorPositionBetweenFloor floor_position_to_last_visited_floor = FLOOR_POSITION_ABOVE; //if the elevator is above or below last visited floor
 
 static void (*p_on_floor_callback)();
 
